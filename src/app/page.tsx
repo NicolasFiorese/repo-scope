@@ -22,24 +22,30 @@ export default function Home() {
   const [page, setPage] = useState(1);
   const [sort, setSort] = useState<SortOption>("best-match");
 
-  async function handleSearch() {
-    if (!query.trim()) return;
+  async function loadRepositories(
+    targetPage: number,
+    targetSort: SortOption
+  ) {
+    const trimmedQuery = query.trim();
+
+    if (!trimmedQuery) return;
 
     try {
       setLoading(true);
       setError(null);
       setHasSearched(true);
+      setPage(targetPage);
+      setSort(targetSort);
 
       const data = await searchRepositories({
-        query,
-        page: 1,
+        query: trimmedQuery,
+        page: targetPage,
         perPage: PER_PAGE,
-        sort,
+        sort: targetSort,
       });
 
       setRepositories(data.items);
       setTotalCount(data.total_count);
-      setPage(1);
     } catch {
       setRepositories([]);
       setTotalCount(0);
@@ -47,6 +53,18 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
+  }
+
+  function handleSearch() {
+    void loadRepositories(1, sort);
+  }
+
+  function handleSortChange(newSort: SortOption) {
+    void loadRepositories(1, newSort);
+  }
+
+  function handlePageChange(newPage: number) {
+    void loadRepositories(newPage, sort);
   }
 
   return (
@@ -68,7 +86,8 @@ export default function Home() {
           hasSearched={hasSearched}
           page={page}
           sort={sort}
-          onSortChange={setSort}
+          onSortChange={handleSortChange}
+          onPageChange={handlePageChange}
         />
       </main>
     </>

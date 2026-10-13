@@ -1,3 +1,4 @@
+import { Pagination } from "@/components/pagination";
 import { RepositoryCard } from "@/components/repository-card";
 import { SortControl } from "@/components/sort-control";
 import type {
@@ -14,6 +15,7 @@ interface RepositorySectionProps {
   page: number;
   sort: SortOption;
   onSortChange: (value: SortOption) => void;
+  onPageChange: (page: number) => void;
 }
 
 export function RepositorySection({
@@ -25,7 +27,11 @@ export function RepositorySection({
   page,
   sort,
   onSortChange,
+  onPageChange,
 }: RepositorySectionProps) {
+  const maxResults = Math.min(totalCount, 1000);
+  const totalPages = Math.ceil(maxResults / 12);
+
   if (!hasSearched) {
     return null;
   }
@@ -90,15 +96,24 @@ export function RepositorySection({
         {!loading &&
           !error &&
           repositories.length > 0 && (
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {repositories.map((repository, index) => (
-                <RepositoryCard
-                  key={repository.id}
-                  repository={repository}
-                  rank={(page - 1) * 12 + index + 1}
-                />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {repositories.map((repository, index) => (
+                  <RepositoryCard
+                    key={repository.id}
+                    repository={repository}
+                    rank={(page - 1) * 12 + index + 1}
+                  />
+                ))}
+              </div>
+
+              <Pagination
+                page={page}
+                totalPages={totalPages}
+                disabled={loading}
+                onPageChange={onPageChange}
+              />
+            </>
           )}
       </div>
     </section>
