@@ -1,58 +1,35 @@
 import { RepositoryCard } from "@/components/repository-card";
 import { SortControl } from "@/components/sort-control";
+import type {
+  GitHubRepository,
+  SortOption,
+} from "@/types/github";
 
-const repositories = [
-  {
-    rank: 1,
-    stars: "131.4K",
-    name: "vercel/next.js",
-    description: "The React Framework",
-    language: "JavaScript",
-    updatedAt: "Updated 2 hours ago",
-  },
-  {
-    rank: 2,
-    stars: "44.1K",
-    name: "vercel/hyper",
-    description: "A terminal built on web technologies",
-    language: "JavaScript",
-    updatedAt: "Updated 2 weeks ago",
-  },
-  {
-    rank: 3,
-    stars: "31.2K",
-    name: "vercel/swr",
-    description: "React Hooks for Data Fetching",
-    language: "TypeScript",
-    updatedAt: "Updated yesterday",
-  },
-  {
-    rank: 4,
-    stars: "28K",
-    name: "vercel/turborepo",
-    description: "System optimized for JS and TS",
-    language: "Rust",
-    updatedAt: "Updated 5 hours ago",
-  },
-  {
-    rank: 5,
-    stars: "18.7K",
-    name: "vercel/ai",
-    description: "The AI Toolkit for TypeScript",
-    language: "TypeScript",
-    updatedAt: "Updated 3 hours ago",
-  },
-  {
-    rank: 6,
-    stars: "12.3K",
-    name: "vercel/satori",
-    description: "Library to convert HTML and CSS to SVG",
-    language: "TypeScript",
-    updatedAt: "Updated last month",
-  },
-];
+interface RepositorySectionProps {
+  repositories: GitHubRepository[];
+  totalCount: number;
+  loading: boolean;
+  error: string | null;
+  hasSearched: boolean;
+  page: number;
+  sort: SortOption;
+  onSortChange: (value: SortOption) => void;
+}
 
-export function RepositorySection() {
+export function RepositorySection({
+  repositories,
+  totalCount,
+  loading,
+  error,
+  hasSearched,
+  page,
+  sort,
+  onSortChange,
+}: RepositorySectionProps) {
+  if (!hasSearched) {
+    return null;
+  }
+
   return (
     <section className="mx-auto w-full max-w-7xl px-6 pb-16">
       <div className="rounded-3xl border border-white/10 bg-white/10 p-6 backdrop-blur-md">
@@ -62,22 +39,67 @@ export function RepositorySection() {
               Repositories
             </h2>
 
-            <p className="mt-1 text-xs text-white/55">
-              Showing 1–12 of 4,812 repositories
-            </p>
+            {!loading && !error && (
+              <p className="mt-1 text-xs text-white/55">
+                {totalCount.toLocaleString("en-US")} repositories found
+              </p>
+            )}
           </div>
 
-          <SortControl />
+          <SortControl
+            value={sort}
+            onChange={onSortChange}
+          />
         </div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {repositories.map((repository) => (
-            <RepositoryCard
-              key={repository.rank}
-              {...repository}
-            />
-          ))}
-        </div>
+        {loading && (
+          <div className="py-16 text-center text-white/70">
+            Loading repositories...
+          </div>
+        )}
+
+        {!loading && error && (
+          <div
+            role="alert"
+            className="py-16 text-center"
+          >
+            <p className="font-medium">
+              Something went wrong.
+            </p>
+
+            <p className="mt-2 text-sm text-white/60">
+              {error}
+            </p>
+          </div>
+        )}
+
+        {!loading &&
+          !error &&
+          repositories.length === 0 && (
+            <div className="py-16 text-center">
+              <p className="font-medium">
+                No repositories found.
+              </p>
+
+              <p className="mt-2 text-sm text-white/60">
+                Try a different search.
+              </p>
+            </div>
+          )}
+
+        {!loading &&
+          !error &&
+          repositories.length > 0 && (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {repositories.map((repository, index) => (
+                <RepositoryCard
+                  key={repository.id}
+                  repository={repository}
+                  rank={(page - 1) * 12 + index + 1}
+                />
+              ))}
+            </div>
+          )}
       </div>
     </section>
   );

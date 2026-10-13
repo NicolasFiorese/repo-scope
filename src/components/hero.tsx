@@ -1,6 +1,16 @@
 import { SearchField } from "@/components/search-field";
 
-export function Hero() {
+interface HeroProps {
+  query: string;
+  onQueryChange: (value: string) => void;
+  onSearch: () => void;
+}
+
+export function Hero({
+  query,
+  onQueryChange,
+  onSearch,
+}: HeroProps) {
   return (
     <section className="mx-auto flex w-full max-w-4xl flex-col items-center px-6 py-16 text-center">
       <span className="mb-6 text-xs font-semibold uppercase tracking-[0.2em]">
@@ -19,7 +29,11 @@ export function Hero() {
       </p>
 
       <div className="mt-10 w-full">
-        <SearchField />
+        <SearchField
+          query={query}
+          onQueryChange={onQueryChange}
+          onSearch={onSearch}
+        />
       </div>
 
       <div className="mt-5 flex flex-wrap justify-center gap-2 text-xs">

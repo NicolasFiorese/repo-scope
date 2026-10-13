@@ -1,25 +1,19 @@
+import type { GitHubRepository } from "@/types/github";
+
 interface RepositoryCardProps {
+  repository: GitHubRepository;
   rank: number;
-  stars: string;
-  name: string;
-  description: string;
-  language: string;
-  updatedAt: string;
 }
 
 export function RepositoryCard({
+  repository,
   rank,
-  stars,
-  name,
-  description,
-  language,
-  updatedAt,
 }: RepositoryCardProps) {
   return (
     <article className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
       <div className="flex items-center justify-between">
         <span className="rounded-full bg-blue-800/60 px-3 py-2 text-sm font-semibold">
-          {stars}
+          {repository.stargazers_count.toLocaleString("en-US")}
         </span>
 
         <span className="text-xs text-white/40">
@@ -29,22 +23,33 @@ export function RepositoryCard({
 
       <div className="mt-6">
         <a
-          href="#"
+          href={repository.html_url}
+          target="_blank"
+          rel="noreferrer"
           className="font-medium text-white hover:underline"
         >
-          {name} ↗
+          {repository.full_name} ↗
         </a>
 
         <p className="mt-3 min-h-10 text-sm text-white/70">
-          {description}
+          {repository.description ?? "No description available."}
         </p>
       </div>
 
       <div className="mt-6 border-t border-white/10 pt-4">
         <div className="flex flex-wrap items-center gap-4 text-xs text-white/55">
-          <span>{language}</span>
-          <span>★ {stars}</span>
-          <span>◷ {updatedAt}</span>
+          <span>
+            {repository.language ?? "Unknown"}
+          </span>
+
+          <span>
+            ★ {repository.stargazers_count.toLocaleString("en-US")}
+          </span>
+
+          <span>
+            Updated{" "}
+            {new Date(repository.updated_at).toLocaleDateString("en-US")}
+          </span>
         </div>
       </div>
     </article>
