@@ -4,12 +4,21 @@ interface HeroProps {
   query: string;
   onQueryChange: (value: string) => void;
   onSearch: () => void;
+  onSuggestionSearch: (suggestion: string) => void;
 }
+
+const suggestions = [
+  "vercel",
+  "design system",
+  "language:rust cli",
+  "topic:ai stars:>5000",
+];
 
 export function Hero({
   query,
   onQueryChange,
   onSearch,
+  onSuggestionSearch,
 }: HeroProps) {
   return (
     <section className="mx-auto flex w-full max-w-4xl flex-col items-center px-6 py-16 text-center">
@@ -39,21 +48,16 @@ export function Hero({
       <div className="mt-5 flex flex-wrap justify-center gap-2 text-xs">
         <span className="text-white/60">Try</span>
 
-        <button type="button" className="rounded-full bg-white/10 px-3 py-1.5">
-          vercel
-        </button>
-
-        <button type="button" className="rounded-full bg-white/10 px-3 py-1.5">
-          design system
-        </button>
-
-        <button type="button" className="rounded-full bg-white/10 px-3 py-1.5">
-          language:rust cli
-        </button>
-
-        <button type="button" className="rounded-full bg-white/10 px-3 py-1.5">
-          topic:ai stars:&gt;5000
-        </button>
+        {suggestions.map((suggestion) => (
+          <button
+            key={suggestion}
+            type="button"
+            onClick={() => onSuggestionSearch(suggestion)}
+            className="rounded-full bg-white/10 px-3 py-1.5 transition hover:bg-white/20"
+          >
+            {suggestion}
+          </button>
+        ))}
       </div>
     </section>
   );

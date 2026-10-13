@@ -4,7 +4,10 @@ import { useState } from "react";
 import { Header } from "@/components/header";
 import { Hero } from "@/components/hero";
 import { RepositorySection } from "@/components/repository-section";
-import { searchRepositories } from "@/lib/github";
+import {
+  GitHubApiError,
+  searchRepositories,
+} from "@/lib/github";
 import type {
   GitHubRepository,
   SortOption,
@@ -23,10 +26,11 @@ export default function Home() {
   const [sort, setSort] = useState<SortOption>("best-match");
 
   async function loadRepositories(
-    targetPage: number,
-    targetSort: SortOption
-  ) {
-    const trimmedQuery = query.trim();
+  targetPage: number,
+  targetSort: SortOption,
+  searchQuery = query
+) {
+  const trimmedQuery = searchQuery.trim();
 
     if (!trimmedQuery) return;
 
@@ -46,10 +50,32 @@ export default function Home() {
 
       setRepositories(data.items);
       setTotalCount(data.total_count);
-    } catch {
+    } catch (error) {
       setRepositories([]);
       setTotalCount(0);
-      setError("We couldn't load repositories.");
+
+      if (
+        error instanceof GitHubApiError &&
+        error.message === "GitHub rate limit reached."
+      ) {
+        if (error.retryAt) {
+          const retryDate = new Date(error.retryAt * 1000);
+
+          setError(
+            `GitHub rate limit reached. Try again after ${retryDate.toLocaleTimeString()}.`
+          );
+        } else {
+          setError(
+            "GitHub rate limit reached. Please wait a moment and try again."
+          );
+        }
+
+        return;
+      }
+
+      setError(
+        "We couldn't load repositories. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -57,6 +83,11 @@ export default function Home() {
 
   function handleSearch() {
     void loadRepositories(1, sort);
+  }
+
+  function handleSuggestionSearch(suggestion: string) {
+  setQuery(suggestion);
+  void loadRepositories(1, sort, suggestion);
   }
 
   function handleSortChange(newSort: SortOption) {
@@ -76,6 +107,7 @@ export default function Home() {
           query={query}
           onQueryChange={setQuery}
           onSearch={handleSearch}
+          onSuggestionSearch={handleSuggestionSearch}
         />
 
         <RepositorySection

@@ -12,6 +12,22 @@ interface SearchRepositoriesParams {
   sort?: SortOption;
 }
 
+export class GitHubApiError extends Error {
+  status: number;
+  retryAt?: number;
+
+  constructor(
+    message: string,
+    status: number,
+    retryAt?: number
+  ) {
+    super(message);
+    this.name = "GitHubApiError";
+    this.status = status;
+    this.retryAt = retryAt;
+  }
+}
+
 export async function searchRepositories({
   query,
   page = 1,
@@ -39,7 +55,34 @@ export async function searchRepositories({
   );
 
   if (!response.ok) {
-    throw new Error(`GitHub API error: ${response.status}`);
+    const remaining = response.headers.get(
+      "x-ratelimit-remaining"
+    );
+
+    const resetHeader = response.headers.get(
+      "x-ratelimit-reset"
+    );
+
+    const retryAt = resetHeader
+      ? Number(resetHeader)
+      : undefined;
+
+    const isRateLimited =
+      response.status === 429 ||
+      (response.status === 403 && remaining === "0");
+
+    if (isRateLimited) {
+      throw new GitHubApiError(
+        "GitHub rate limit reached.",
+        response.status,
+        retryAt
+      );
+    }
+
+    throw new GitHubApiError(
+      `GitHub API error: ${response.status}`,
+      response.status
+    );
   }
 
   return response.json();
