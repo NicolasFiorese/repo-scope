@@ -98,17 +98,38 @@ export default function Home() {
     void loadRepositories(newPage, sort);
   }
 
-  return (
-    <>
+return (
+  <div className="relative min-h-screen overflow-hidden">
+    <img
+      src="/rays.svg"
+      alt=""
+      aria-hidden="true"
+      className="
+        pointer-events-none
+        absolute
+        left-1/2
+        top-0
+        z-0
+        w-[1700px]
+        max-w-none
+        -translate-x-1/2
+        select-none
+        opacity-[0.78]
+      "
+    />
+
+    <div className="relative z-10">
       <Header />
 
       <main>
-        <Hero
-          query={query}
-          onQueryChange={setQuery}
-          onSearch={handleSearch}
-          onSuggestionSearch={handleSuggestionSearch}
-        />
+       <Hero
+  query={query}
+  totalCount={totalCount}
+  page={page}
+  onQueryChange={setQuery}
+  onSearch={handleSearch}
+  onSuggestionSearch={handleSuggestionSearch}
+/>
 
         <RepositorySection
           repositories={repositories}
@@ -122,6 +143,7 @@ export default function Home() {
           onPageChange={handlePageChange}
         />
       </main>
-    </>
-  );
+    </div>
+  </div>
+);
 }
