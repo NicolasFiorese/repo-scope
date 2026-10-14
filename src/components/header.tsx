@@ -1,6 +1,6 @@
 export function Header() {
   return (
-    <header className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-6">
+    <header className="mx-auto flex w-full max-w-[1184px] items-center justify-between px-6 pt-6">
       <div className="font-semibold">
         repo-scope
       </div>
