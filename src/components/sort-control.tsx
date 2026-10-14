@@ -28,7 +28,16 @@ export function SortControl({
   onChange,
 }: SortControlProps) {
   return (
-    <div className="flex items-center rounded-full bg-white/5 p-1">
+    <div
+      className="
+        flex items-center
+        rounded-full
+        border border-[var(--line-1)]
+        bg-[var(--surface-deep)]
+        p-1
+        backdrop-blur-md
+      "
+    >
       {options.map((option) => {
         const isActive = value === option.value;
 
@@ -36,12 +45,30 @@ export function SortControl({
           <button
             key={option.value}
             type="button"
+            aria-pressed={isActive}
             onClick={() => onChange(option.value)}
-            className={`rounded-full px-4 py-2 text-xs transition ${
-              isActive
-                ? "bg-[#ffb5aa] font-medium text-blue-700"
-                : "text-white/70 hover:bg-white/10"
-            }`}
+            className={`
+              rounded-full
+              px-4 py-2
+              text-[13px]
+              font-medium
+              leading-none
+              transition-all duration-200
+
+              ${
+                isActive
+                  ? `
+                    bg-[var(--coral-300)]
+                    text-[var(--blue-900)]
+                    shadow-[0_4px_14px_-5px_rgba(196,64,46,0.4)]
+                  `
+                  : `
+                    text-[var(--ink-2)]
+                    hover:bg-white/10
+                    hover:text-[var(--coral-100)]
+                  `
+              }
+            `}
           >
             {option.label}
           </button>
