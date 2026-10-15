@@ -7,7 +7,9 @@ interface HeroProps {
   page: number;
   onQueryChange: (value: string) => void;
   onSearch: () => void;
-  onSuggestionSearch: (suggestion: string) => void;
+  onSuggestionSearch: (
+    suggestion: string
+  ) => void;
 }
 
 const suggestions = [
@@ -26,21 +28,45 @@ export function Hero({
   onSuggestionSearch,
 }: HeroProps) {
   return (
-    <section className="relative mx-auto flex w-full max-w-[1184px] flex-col items-center px-6 pb-8 pt-20 text-center">
+    <section
+      className="
+        relative
+        mx-auto
+        flex w-full
+        max-w-[1184px]
+        flex-col
+        items-center
+        px-4
+        pb-8
+        pt-12
+        text-center
+
+        sm:px-6
+        sm:pt-16
+
+        lg:pt-20
+      "
+    >
       <div
         className="
-          mb-7 flex items-center gap-2
+          mb-5
+          flex items-center
+          gap-2
           rounded-full
           border border-[var(--line-1)]
           bg-[var(--surface-glass)]
           px-3 py-1.5
           backdrop-blur-sm
+
+          sm:mb-6
+          lg:mb-7
         "
       >
         <span
           aria-hidden="true"
           className="
-            h-2 w-2 rounded-full
+            h-2 w-2
+            rounded-full
             bg-[var(--coral-500)]
             shadow-[0_0_10px_rgba(255,129,112,0.65)]
           "
@@ -48,11 +74,14 @@ export function Hero({
 
         <span
           className="
-            text-[10px]
+            text-[9px]
             font-semibold
             uppercase
-            tracking-[0.2em]
+            tracking-[0.18em]
             text-[var(--ink-1)]
+
+            sm:text-[10px]
+            sm:tracking-[0.2em]
           "
         >
           Live from the GitHub API
@@ -61,10 +90,16 @@ export function Hero({
 
       <h1
         className="
-          text-[76px]
+          max-w-[760px]
+          text-[clamp(44px,10vw,76px)]
           font-medium
-          leading-[1.02]
-          tracking-[-0.035em]
+          leading-[0.98]
+          tracking-[-0.045em]
+
+          sm:leading-[1]
+
+          lg:leading-[1.02]
+          lg:tracking-[-0.035em]
         "
       >
         <span className="text-[var(--coral-300)]">
@@ -80,20 +115,34 @@ export function Hero({
 
       <p
         className="
-          mt-7
+          mt-5
           max-w-[532px]
-          text-[19px]
-          font-normal
+          px-1
+          text-[16px]
           leading-[1.5]
-          tracking-normal
           text-[var(--ink-2)]
+
+          sm:mt-6
+          sm:text-[17px]
+
+          lg:mt-7
+          lg:text-[19px]
         "
       >
-        Search millions of public repositories. Sort by stars or freshness,
-        skim what matters, jump straight to the source.
+        Search millions of public repositories.
+        Sort by stars or freshness, skim what
+        matters, jump straight to the source.
       </p>
 
-      <div className="mt-10 w-full">
+      <div
+        className="
+          mt-7
+          w-full
+
+          sm:mt-8
+          lg:mt-10
+        "
+      >
         <SearchField
           query={query}
           onQueryChange={onQueryChange}
@@ -101,31 +150,65 @@ export function Hero({
         />
       </div>
 
-      <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-[13px]">
-        <span className="leading-none text-[var(--ink-3)]">
+      <div
+        className="
+          mt-4
+          flex
+          max-w-[680px]
+          flex-wrap
+          items-center
+          justify-center
+          gap-2
+          text-[12px]
+
+          sm:mt-5
+          sm:text-[13px]
+        "
+      >
+        <span
+          className="
+            leading-none
+            text-[var(--ink-3)]
+          "
+        >
           Try
         </span>
 
-        {suggestions.map((suggestion) => (
-          <button
-            key={suggestion}
-            type="button"
-            onClick={() => onSuggestionSearch(suggestion)}
-            className="
-              rounded-full
-              border border-[var(--line-1)]
-              bg-transparent
-              px-3 py-1.5
-              leading-none
-              text-[var(--ink-2)]
-              transition duration-200
-              hover:bg-white/10
-              hover:text-[var(--coral-100)]
-            "
-          >
-            {suggestion}
-          </button>
-        ))}
+        {suggestions.map(
+          (suggestion) => (
+            <button
+              key={suggestion}
+              type="button"
+              onClick={() =>
+                onSuggestionSearch(
+                  suggestion
+                )
+              }
+              className="
+                rounded-full
+                border
+                border-[var(--line-1)]
+                bg-transparent
+                px-3 py-1.5
+                leading-none
+                text-[var(--ink-2)]
+                transition
+                duration-200
+
+                hover:-translate-y-px
+                hover:border-[var(--coral-300)]
+                hover:bg-white/[0.08]
+                hover:text-[var(--coral-100)]
+
+                focus-visible:outline-none
+                focus-visible:ring-2
+                focus-visible:ring-[var(--coral-300)]
+              "
+            >
+              {suggestion}
+            </button>
+          )
+        )}
       </div>
 
       <SearchSummary

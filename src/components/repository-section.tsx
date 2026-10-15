@@ -64,7 +64,9 @@ export function RepositorySection({
     (page - 1) * PER_PAGE + 1;
 
   const lastResult = Math.min(
-    firstResult + repositories.length - 1,
+    firstResult +
+      repositories.length -
+      1,
     maxResults
   );
 
@@ -105,18 +107,49 @@ export function RepositorySection({
   }
 
   return (
-    <section className="relative z-10 mx-auto w-full max-w-[1184px] px-6 pb-20">
+    <section
+      className="
+        relative
+        z-10
+        mx-auto
+        w-full
+        max-w-[1184px]
+        px-4
+        pb-12
+
+        sm:px-6
+        sm:pb-16
+
+        lg:pb-20
+      "
+    >
       <div
         className="
           rounded-[28px]
-          border border-[var(--line-1)]
+          border
+          border-[var(--line-1)]
           bg-[var(--surface-glass-strong)]
-          p-7
+          p-4
           shadow-[0_28px_70px_-30px_rgba(0,40,140,0.8)]
           backdrop-blur-[20px]
+
+          sm:p-6
+          lg:p-7
         "
       >
-        <div className="mb-6 flex items-start justify-between gap-8">
+        <div
+          className="
+            mb-6
+            flex
+            flex-col
+            gap-4
+
+            lg:flex-row
+            lg:items-start
+            lg:justify-between
+            lg:gap-8
+          "
+        >
           <div>
             <h2
               className="
@@ -154,21 +187,27 @@ export function RepositorySection({
             )}
           </div>
 
-          <SortControl
-            value={sort}
-            onChange={
-              handleSortChange
-            }
-          />
+          <div className="w-full lg:w-auto">
+            <SortControl
+              value={sort}
+              onChange={
+                handleSortChange
+              }
+            />
+          </div>
         </div>
 
         {loading && (
           <div
             className="
-              flex min-h-[320px]
-              items-center justify-center
+              flex
+              min-h-[280px]
+              items-center
+              justify-center
               text-[15px]
               text-[var(--ink-2)]
+
+              sm:min-h-[320px]
             "
           >
             Loading repositories...
@@ -179,10 +218,14 @@ export function RepositorySection({
           <div
             role="alert"
             className="
-              flex min-h-[320px]
-              flex-col items-center
+              flex
+              min-h-[280px]
+              flex-col
+              items-center
               justify-center
               text-center
+
+              sm:min-h-[320px]
             "
           >
             <p
@@ -195,7 +238,13 @@ export function RepositorySection({
               Something went wrong.
             </p>
 
-            <p className="mt-2 text-[14px] text-[var(--ink-3)]">
+            <p
+              className="
+                mt-2
+                text-[14px]
+                text-[var(--ink-3)]
+              "
+            >
               {error}
             </p>
           </div>
@@ -203,13 +252,18 @@ export function RepositorySection({
 
         {!loading &&
           !error &&
-          repositories.length === 0 && (
+          repositories.length ===
+            0 && (
             <div
               className="
-                flex min-h-[320px]
-                flex-col items-center
+                flex
+                min-h-[280px]
+                flex-col
+                items-center
                 justify-center
                 text-center
+
+                sm:min-h-[320px]
               "
             >
               <p
@@ -222,7 +276,13 @@ export function RepositorySection({
                 No repositories found.
               </p>
 
-              <p className="mt-2 text-[14px] text-[var(--ink-3)]">
+              <p
+                className="
+                  mt-2
+                  text-[14px]
+                  text-[var(--ink-3)]
+                "
+              >
                 Try a different search.
               </p>
             </div>
@@ -232,7 +292,16 @@ export function RepositorySection({
           !error &&
           repositories.length > 0 && (
             <>
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <div
+                className="
+                  grid
+                  grid-cols-1
+                  gap-4
+
+                  md:grid-cols-2
+                  lg:grid-cols-3
+                "
+              >
                 {visibleRepositories.map(
                   (
                     repository,
@@ -264,7 +333,8 @@ export function RepositorySection({
                   }
                   className="
                     mt-4
-                    flex w-full
+                    flex
+                    w-full
                     items-center
                     justify-center
                     rounded-[14px]
@@ -272,9 +342,10 @@ export function RepositorySection({
                     border-dashed
                     border-[var(--line-2)]
                     bg-transparent
-                    px-4 py-3
+                    px-4
+                    py-3
                     font-[family-name:var(--font-jetbrains-mono)]
-                    text-[12px]
+                    text-[11px]
                     font-medium
                     text-[var(--ink-3)]
                     transition
@@ -287,6 +358,8 @@ export function RepositorySection({
                     focus-visible:outline-none
                     focus-visible:ring-2
                     focus-visible:ring-[var(--coral-300)]
+
+                    sm:text-[12px]
                   "
                 >
                   {showAll
@@ -309,10 +382,13 @@ export function RepositorySection({
               <p
                 className="
                   mt-3
+                  hidden
                   text-center
                   font-[family-name:var(--font-jetbrains-mono)]
                   text-[11px]
                   text-[var(--ink-3)]
+
+                  lg:block
                 "
               >
                 Tip: use ← → to change

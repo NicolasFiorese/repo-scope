@@ -27,7 +27,13 @@ export function RepositoryCard({
   repository,
   rank,
 }: RepositoryCardProps) {
-  const stars = formatCompactNumber(repository.stargazers_count);
+  const stars = formatCompactNumber(
+    repository.stargazers_count
+  );
+
+  const updatedDate = new Date(
+    repository.updated_at
+  ).toLocaleDateString("en-US");
 
   return (
     <article
@@ -37,11 +43,13 @@ export function RepositoryCard({
         min-h-[190px]
         overflow-hidden
         rounded-[18px]
-        border border-[var(--line-1)]
+        border
+        border-[var(--line-1)]
         bg-[var(--surface-glass)]
         p-5
         backdrop-blur-[14px]
-        transition-all duration-300
+        transition-all
+        duration-300
 
         hover:-translate-y-1
         hover:border-[rgb(255_129_112_/_45%)]
@@ -57,36 +65,44 @@ export function RepositoryCard({
         aria-hidden="true"
         className="
           pointer-events-none
-          absolute -right-10 -top-10
-          h-36 w-36
+          absolute
+          -right-10
+          -top-10
+          h-36
+          w-36
           rounded-full
           bg-[radial-gradient(circle,rgba(255,129,112,0.12)_0%,transparent_68%)]
           opacity-0
-          transition-opacity duration-300
+          transition-opacity
+          duration-300
           group-hover:opacity-100
         "
       />
 
-<div className="relative z-10 flex items-start justify-between">
-  <div
-    className="
-      flex h-[56px] w-[56px]
-      shrink-0
-      items-center justify-center
-      rounded-full
-      border border-white/10
-      bg-[var(--surface-deep)]
-      px-1
-      font-[family-name:var(--font-jetbrains-mono)]
-      text-[13px]
-      font-bold
-      tracking-[-0.02em]
-      text-[var(--ink-1)]
-      shadow-[inset_0_1px_6px_rgba(255,255,255,0.08)]
-    "
-  >
-    {stars}
-  </div>
+      <div className="relative z-10 flex items-start justify-between">
+        <div
+          className="
+            flex
+            h-[56px]
+            w-[56px]
+            shrink-0
+            items-center
+            justify-center
+            rounded-full
+            border
+            border-white/10
+            bg-[var(--surface-deep)]
+            px-1
+            font-[family-name:var(--font-jetbrains-mono)]
+            text-[13px]
+            font-bold
+            tracking-[-0.02em]
+            text-[var(--ink-1)]
+            shadow-[inset_0_1px_6px_rgba(255,255,255,0.08)]
+          "
+        >
+          {stars}
+        </div>
 
         <span
           className="
@@ -100,29 +116,40 @@ export function RepositoryCard({
         </span>
       </div>
 
-      <div className="relative z-10 mt-5">
+      <div className="relative z-10 mt-5 min-w-0">
         <a
           href={repository.html_url}
           target="_blank"
           rel="noreferrer"
           className="
-            inline-flex items-center gap-1
+            inline-flex
+            max-w-full
+            items-start
+            gap-1
             text-[15px]
             font-medium
             tracking-[-0.01em]
             text-[var(--ink-2)]
             outline-none
             transition-colors
+            [overflow-wrap:anywhere]
+
             group-hover:text-[var(--coral-200)]
+
+            focus-visible:text-[var(--coral-100)]
           "
         >
-          {repository.full_name}
+          <span className="min-w-0">
+            {repository.full_name}
+          </span>
 
           <span
             aria-hidden="true"
             className="
+              shrink-0
               text-[var(--coral-300)]
-              transition-transform duration-200
+              transition-transform
+              duration-200
               group-hover:-translate-y-0.5
               group-hover:translate-x-0.5
             "
@@ -141,16 +168,24 @@ export function RepositoryCard({
             text-[var(--ink-2)]
           "
         >
-          {repository.description ?? "No description available."}
+          {repository.description ??
+            "No description available."}
         </p>
       </div>
 
       <div
         className="
-          relative z-10
+          relative
+          z-10
           mt-5
-          flex flex-wrap items-center gap-x-4 gap-y-2
-          border-t border-dashed border-[var(--line-1)]
+          flex
+          flex-wrap
+          items-center
+          gap-x-4
+          gap-y-2
+          border-t
+          border-dashed
+          border-[var(--line-1)]
           pt-4
           font-[family-name:var(--font-jetbrains-mono)]
           text-[11px]
@@ -158,19 +193,22 @@ export function RepositoryCard({
           text-[var(--ink-3)]
         "
       >
-        <span className="flex items-center gap-1.5">
+        <span className="flex items-center gap-1.5 whitespace-nowrap">
           <span
             aria-hidden="true"
-            className="h-2 w-2 rounded-full"
+            className="h-2 w-2 shrink-0 rounded-full"
             style={{
-              backgroundColor: getLanguageColor(repository.language),
+              backgroundColor:
+                getLanguageColor(
+                  repository.language
+                ),
             }}
           />
 
           {repository.language ?? "Unknown"}
         </span>
 
-        <span className="flex items-center gap-1.5">
+        <span className="flex items-center gap-1.5 whitespace-nowrap">
           <span
             aria-hidden="true"
             className="text-[var(--coral-300)]"
@@ -178,13 +216,17 @@ export function RepositoryCard({
             ★
           </span>
 
-          {repository.stargazers_count.toLocaleString("en-US")}
+          {repository.stargazers_count.toLocaleString(
+            "en-US"
+          )}
         </span>
 
-        <span>
-          Updated{" "}
-          {new Date(repository.updated_at).toLocaleDateString("en-US")}
-        </span>
+        <time
+          dateTime={repository.updated_at}
+          className="whitespace-nowrap"
+        >
+          Updated {updatedDate}
+        </time>
       </div>
     </article>
   );

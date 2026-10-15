@@ -4,13 +4,24 @@ export function Footer() {
   className="
     relative z-10
     mt-auto
-    mx-auto flex w-full max-w-[1184px]
-        items-center gap-6
-        px-6 pb-8
-        text-[11px]
-        text-[var(--ink-3)]
-      "
-    >
+    mx-auto
+    flex w-full
+    max-w-[1184px]
+    flex-col
+    items-start
+    gap-2
+    px-4
+    pb-6
+    text-[11px]
+    text-[var(--ink-3)]
+
+    sm:flex-row
+    sm:items-center
+    sm:gap-6
+    sm:px-6
+    sm:pb-8
+  "
+>
       <span>© repo·scope 2026</span>
 
       <span>

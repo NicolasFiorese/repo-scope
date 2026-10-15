@@ -66,103 +66,216 @@ function GitHubIcon() {
 
 export function Header() {
   return (
-    <header className="mx-auto flex w-full max-w-[1184px] items-center justify-between px-6 pt-6">
-      <a
-        href="#"
-        className="flex items-center gap-3 font-semibold text-[var(--coral-300)]"
-      >
-        <SearchIcon />
+    <header
+      className="
+        relative
+        z-20
+        mx-auto
+        w-full
+        max-w-[1184px]
+        px-4
+        pt-5
 
-        <span className="text-[18px] tracking-[-0.02em]">
-          repo·scope
-        </span>
-      </a>
-
-      <nav
-        aria-label="Main navigation"
+        sm:px-6
+        sm:pt-6
+      "
+    >
+      <div
         className="
-          flex items-center
-          rounded-full
-          border border-[var(--line-1)]
-          bg-[var(--surface-glass)]
-          p-1
-          backdrop-blur-md
+          grid
+          grid-cols-[1fr_auto]
+          items-center
+          gap-y-3
+
+          lg:grid-cols-[1fr_auto_1fr]
+          lg:gap-y-0
         "
       >
+        {/* Logo */}
         <a
           href="#"
-          aria-current="page"
           className="
-            flex items-center gap-2
-            rounded-full
-            border border-[var(--line-1)]
-            bg-[var(--surface-deep)]
-            px-4 py-2
-            text-sm text-[var(--ink-1)]
-            transition
-            hover:bg-white/10
+            col-start-1
+            row-start-1
+            flex
+            items-center
+            justify-self-start
+            gap-2
+            font-semibold
+            text-[var(--coral-300)]
+
+            sm:gap-3
           "
         >
           <SearchIcon />
-          Search
+
+          <span
+            className="
+              text-[16px]
+              tracking-[-0.02em]
+
+              sm:text-[18px]
+            "
+          >
+            repo·scope
+          </span>
         </a>
 
-        <a
-          href="#"
+        {/* Navigation */}
+        <nav
+          aria-label="Main navigation"
           className="
-            flex items-center gap-2
+            col-span-2
+            row-start-2
+            flex
+            items-center
+            justify-self-center
             rounded-full
-            px-4 py-2
-            text-sm text-[var(--ink-1)]
-            transition
-            hover:bg-white/10
+            border
+            border-[var(--line-1)]
+            bg-[var(--surface-glass)]
+            p-1
+            backdrop-blur-md
+
+            lg:col-span-1
+            lg:col-start-2
+            lg:row-start-1
           "
         >
-          <TrendingIcon />
-          Trending
-        </a>
+          <a
+            href="#"
+            aria-current="page"
+            className="
+              flex
+              items-center
+              gap-1.5
+              rounded-full
+              border
+              border-[var(--line-1)]
+              bg-[var(--surface-deep)]
+              px-3
+              py-2
+              text-[12px]
+              text-[var(--ink-1)]
+              transition
 
+              hover:bg-white/10
+
+              focus-visible:outline-none
+              focus-visible:ring-2
+              focus-visible:ring-[var(--coral-300)]
+
+              sm:gap-2
+              sm:px-4
+              sm:text-sm
+            "
+          >
+            <SearchIcon />
+            Search
+          </a>
+
+          <a
+            href="#"
+            className="
+              flex
+              items-center
+              gap-1.5
+              rounded-full
+              px-3
+              py-2
+              text-[12px]
+              text-[var(--ink-1)]
+              transition
+
+              hover:bg-white/10
+
+              focus-visible:outline-none
+              focus-visible:ring-2
+              focus-visible:ring-[var(--coral-300)]
+
+              sm:gap-2
+              sm:px-4
+              sm:text-sm
+            "
+          >
+            <TrendingIcon />
+            Trending
+          </a>
+
+          <a
+            href="https://docs.github.com/en/rest/search/search"
+            target="_blank"
+            rel="noreferrer"
+            className="
+              flex
+              items-center
+              gap-1.5
+              rounded-full
+              px-3
+              py-2
+              text-[12px]
+              text-[var(--ink-1)]
+              transition
+
+              hover:bg-white/10
+
+              focus-visible:outline-none
+              focus-visible:ring-2
+              focus-visible:ring-[var(--coral-300)]
+
+              sm:gap-2
+              sm:px-4
+              sm:text-sm
+            "
+          >
+            <CodeIcon />
+            API
+          </a>
+        </nav>
+
+        {/* GitHub */}
         <a
-          href="https://docs.github.com/en/rest/search/search"
+          href="https://github.com"
           target="_blank"
           rel="noreferrer"
           className="
-            flex items-center gap-2
+            col-start-2
+            row-start-1
+            flex
+            items-center
+            justify-self-end
+            gap-1.5
             rounded-full
-            px-4 py-2
-            text-sm text-[var(--ink-1)]
+            border
+            border-[var(--line-2)]
+            bg-[var(--surface-glass)]
+            px-3
+            py-2
+            text-[12px]
+            text-[var(--ink-1)]
+            backdrop-blur-md
             transition
+            duration-200
+
+            hover:-translate-y-px
+            hover:border-[var(--coral-300)]
             hover:bg-white/10
+
+            focus-visible:outline-none
+            focus-visible:ring-2
+            focus-visible:ring-[var(--coral-300)]
+
+            sm:gap-2
+            sm:px-4
+            sm:text-sm
+
+            lg:col-start-3
           "
         >
-          <CodeIcon />
-          API
+          <GitHubIcon />
+          GitHub
         </a>
-      </nav>
-
-      <a
-        href="https://github.com"
-        target="_blank"
-        rel="noreferrer"
-        className="
-          flex items-center gap-2
-          rounded-full
-          border border-[var(--line-2)]
-          bg-[var(--surface-glass)]
-          px-4 py-2
-          text-sm text-[var(--ink-1)]
-          backdrop-blur-md
-          transition duration-200
-          hover:border-[var(--coral-300)]
-          hover:bg-white/10
-          focus-visible:outline-none
-          focus-visible:ring-2
-          focus-visible:ring-[var(--coral-300)]
-        "
-      >
-        <GitHubIcon />
-        GitHub
-      </a>
+      </div>
     </header>
   );
 }
