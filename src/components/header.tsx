@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 function SearchIcon() {
@@ -94,41 +95,37 @@ export function Header() {
         "
       >
         {/* Logo */}
-        <Link
-          href="/"
-          aria-label="repo·scope home"
-          className="
-            col-start-1
-            row-start-1
-            flex
-            items-center
-            justify-self-start
-            gap-2
-            font-semibold
-            text-[var(--coral-300)]
+  <Link
+  href="/"
+  aria-label="repo·scope home"
+  className="
+    col-start-1
+    row-start-1
+    justify-self-start
+    rounded-md
 
-            focus-visible:outline-none
-            focus-visible:ring-2
-            focus-visible:ring-[var(--coral-300)]
-            focus-visible:ring-offset-4
-            focus-visible:ring-offset-[var(--blue-600)]
+    focus-visible:outline-none
+    focus-visible:ring-2
+    focus-visible:ring-[var(--coral-300)]
+    focus-visible:ring-offset-4
+    focus-visible:ring-offset-[var(--blue-600)]
+  "
+>
+<Image
+  src="/logo-repo.svg"
+  alt=""
+  width={148}
+  height={30}
+  priority
+  className="
+    h-[24px]
+    w-[118px]
 
-            sm:gap-3
-          "
-        >
-          <SearchIcon />
-
-          <span
-            className="
-              text-[16px]
-              tracking-[-0.02em]
-
-              sm:text-[18px]
-            "
-          >
-            repo·scope
-          </span>
-        </Link>
+    sm:h-[30px]
+    sm:w-[148px]
+  "
+/>
+</Link>
 
         {/* Navigation */}
         <nav

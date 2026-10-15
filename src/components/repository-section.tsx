@@ -126,19 +126,19 @@ export function RepositorySection({
       "
     >
       <div
-        className="
-          rounded-[28px]
-          border
-          border-[var(--line-1)]
-          bg-[var(--surface-glass-strong)]
-          p-4
-          shadow-[0_28px_70px_-30px_rgba(0,40,140,0.8)]
-          backdrop-blur-[20px]
+  className="
+    rounded-[28px]
+    border
+    border-white/[0.13]
+    bg-white/[0.035]
+    p-4
+    shadow-[0_30px_80px_-40px_rgba(0,40,140,0.55)]
+    backdrop-blur-[2px]
 
-          sm:p-6
-          lg:p-7
-        "
-      >
+    sm:p-6
+    lg:p-7
+  "
+>
         <div
           className="
             mb-6

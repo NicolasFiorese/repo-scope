@@ -37,30 +37,30 @@ export function RepositoryCard({
 
   return (
     <article
-      className="
-        group
-        relative
-        min-h-[190px]
-        overflow-hidden
-        rounded-[18px]
-        border
-        border-[var(--line-1)]
-        bg-[var(--surface-glass)]
-        p-5
-        backdrop-blur-[14px]
-        transition-all
-        duration-300
+  className="
+    group
+    relative
+    min-h-[190px]
+    overflow-hidden
+    rounded-[18px]
+    border
+    border-[var(--line-1)]
+    bg-white/[0.075]
+    p-5
+    backdrop-blur-[4px]
+    transition-all
+    duration-300
 
-        hover:-translate-y-1
-        hover:border-[rgb(255_129_112_/_45%)]
-        hover:bg-white/[0.075]
-        hover:shadow-[0_18px_38px_-18px_rgba(0,40,140,0.85)]
+    hover:-translate-y-1
+    hover:border-[rgb(255_129_112_/_45%)]
+    hover:bg-white/[0.10]
+    hover:shadow-[0_18px_38px_-18px_rgba(0,40,140,0.85)]
 
-        focus-within:ring-2
-        focus-within:ring-inset
-        focus-within:ring-[var(--coral-300)]
-      "
-    >
+    focus-within:ring-2
+    focus-within:ring-inset
+    focus-within:ring-[var(--coral-300)]
+  "
+>
       <div
         aria-hidden="true"
         className="
