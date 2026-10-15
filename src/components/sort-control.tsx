@@ -56,6 +56,7 @@ export function SortControl({
               onChange(option.value)
             }
             className={`
+              cursor-pointer
               flex-1
               whitespace-nowrap
               rounded-full

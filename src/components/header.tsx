@@ -1,6 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 
+interface HeaderProps {
+  onTrending: () => void;
+}
+
 function SearchIcon() {
   return (
     <svg
@@ -41,7 +45,13 @@ function CodeIcon() {
     <svg
       viewBox="0 0 24 24"
       aria-hidden="true"
-      className="h-4 w-4"
+      className="
+        h-[18px]
+        w-[18px]
+
+        sm:h-5
+        sm:w-5
+      "
       fill="none"
       stroke="currentColor"
       strokeWidth="2"
@@ -67,7 +77,9 @@ function GitHubIcon() {
   );
 }
 
-export function Header() {
+export function Header({
+  onTrending,
+}: HeaderProps) {
   return (
     <header
       className="
@@ -95,37 +107,37 @@ export function Header() {
         "
       >
         {/* Logo */}
-  <Link
-  href="/"
-  aria-label="repo·scope home"
-  className="
-    col-start-1
-    row-start-1
-    justify-self-start
-    rounded-md
+        <Link
+          href="/"
+          aria-label="repo·scope home"
+          className="
+            col-start-1
+            row-start-1
+            justify-self-start
+            rounded-md
 
-    focus-visible:outline-none
-    focus-visible:ring-2
-    focus-visible:ring-[var(--coral-300)]
-    focus-visible:ring-offset-4
-    focus-visible:ring-offset-[var(--blue-600)]
-  "
->
-<Image
-  src="/logo-repo.svg"
-  alt=""
-  width={148}
-  height={30}
-  priority
-  className="
-    h-[24px]
-    w-[118px]
+            focus-visible:outline-none
+            focus-visible:ring-2
+            focus-visible:ring-[var(--coral-300)]
+            focus-visible:ring-offset-4
+            focus-visible:ring-offset-[var(--blue-600)]
+          "
+        >
+          <Image
+            src="/logo-repo.svg"
+            alt=""
+            width={148}
+            height={30}
+            priority
+            className="
+              h-[24px]
+              w-[118px]
 
-    sm:h-[30px]
-    sm:w-[148px]
-  "
-/>
-</Link>
+              sm:h-[30px]
+              sm:w-[148px]
+            "
+          />
+        </Link>
 
         {/* Navigation */}
         <nav
@@ -138,16 +150,17 @@ export function Header() {
             justify-self-center
             rounded-full
             border
-            border-[var(--line-1)]
-            bg-[var(--surface-glass)]
+            border-white/[0.13]
+            bg-white/[0.055]
             p-1
-            backdrop-blur-md
+            backdrop-blur-[1px]
 
             lg:col-span-1
             lg:col-start-2
             lg:row-start-1
           "
         >
+          {/* Search */}
           <Link
             href="/"
             aria-current="page"
@@ -157,15 +170,17 @@ export function Header() {
               gap-1.5
               rounded-full
               border
-              border-[var(--line-1)]
-              bg-[var(--surface-deep)]
+              border-white/[0.13]
+              bg-white/[0.075]
               px-3
               py-2
               text-[12px]
               text-[var(--ink-1)]
+              backdrop-blur-[1px]
               transition
+              duration-200
 
-              hover:bg-white/10
+              hover:bg-white/[0.10]
 
               focus-visible:outline-none
               focus-visible:ring-2
@@ -180,12 +195,14 @@ export function Header() {
             Search
           </Link>
 
-          {/* Decorative Figma item — not part of challenge scope */}
-          <span
-            aria-hidden="true"
+          {/* Trending */}
+          <button
+            type="button"
+            onClick={onTrending}
+            aria-label="Show trending repositories"
             className="
               flex
-              cursor-default
+              cursor-pointer
               items-center
               gap-1.5
               rounded-full
@@ -193,6 +210,15 @@ export function Header() {
               py-2
               text-[12px]
               text-[var(--ink-1)]
+              transition
+              duration-200
+
+              hover:bg-white/[0.08]
+              hover:text-[var(--coral-100)]
+
+              focus-visible:outline-none
+              focus-visible:ring-2
+              focus-visible:ring-[var(--coral-300)]
 
               sm:gap-2
               sm:px-4
@@ -201,8 +227,9 @@ export function Header() {
           >
             <TrendingIcon />
             Trending
-          </span>
+          </button>
 
+          {/* API */}
           <a
             href="https://docs.github.com/en/rest/search/search"
             target="_blank"
@@ -218,8 +245,10 @@ export function Header() {
               text-[12px]
               text-[var(--ink-1)]
               transition
+              duration-200
 
-              hover:bg-white/10
+              hover:bg-white/[0.08]
+              hover:text-[var(--coral-100)]
 
               focus-visible:outline-none
               focus-visible:ring-2
@@ -250,19 +279,19 @@ export function Header() {
             gap-1.5
             rounded-full
             border
-            border-[var(--line-2)]
-            bg-[var(--surface-glass)]
+            border-white/[0.13]
+            bg-white/[0.055]
             px-3
             py-2
             text-[12px]
             text-[var(--ink-1)]
-            backdrop-blur-md
+            backdrop-blur-[1px]
             transition
             duration-200
 
             hover:-translate-y-px
             hover:border-[var(--coral-300)]
-            hover:bg-white/10
+            hover:bg-white/[0.085]
 
             focus-visible:outline-none
             focus-visible:ring-2

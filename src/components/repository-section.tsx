@@ -332,42 +332,43 @@ export function RepositorySection({
               </div>
 
               {hiddenCount > 0 && (
-                <button
-                  type="button"
-                  onClick={
-                    handleToggleCards
-                  }
-                  className="
-                    mt-4
-                    flex
-                    w-full
-                    items-center
-                    justify-center
-                    rounded-[14px]
-                    border
-                    border-dashed
-                    border-[var(--line-2)]
-                    bg-transparent
-                    px-4
-                    py-3
-                    font-[family-name:var(--font-jetbrains-mono)]
-                    text-[11px]
-                    font-medium
-                    text-[var(--ink-3)]
-                    transition
-                    duration-200
+               <button
+  type="button"
+  onClick={
+    handleToggleCards
+  }
+  className="
+    mt-4
+    flex
+    w-full
+    cursor-pointer
+    items-center
+    justify-center
+    rounded-[14px]
+    border
+    border-dashed
+    border-[var(--line-2)]
+    bg-transparent
+    px-4
+    py-3
+    font-[family-name:var(--font-jetbrains-mono)]
+    text-[11px]
+    font-medium
+    text-[var(--ink-3)]
+    transition
+    duration-200
 
-                    hover:border-[rgb(255_184_172_/_55%)]
-                    hover:bg-white/[0.04]
-                    hover:text-[var(--coral-100)]
+    hover:border-[rgb(255_184_172_/_55%)]
+    hover:bg-white/[0.04]
+    hover:text-[var(--coral-100)]
 
-                    focus-visible:outline-none
-                    focus-visible:ring-2
-                    focus-visible:ring-[var(--coral-300)]
+    focus-visible:outline-none
+    focus-visible:ring-2
+    focus-visible:ring-[var(--coral-300)]
 
-                    sm:text-[12px]
-                  "
-                >
+    sm:text-[12px]
+  "
+>
                   {showAll
                     ? "Show fewer cards"
                     : `${hiddenCount} more cards (12 per page)`}

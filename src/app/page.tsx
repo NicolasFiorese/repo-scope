@@ -30,9 +30,7 @@ export default function Home() {
   const [
     repositories,
     setRepositories,
-  ] = useState<
-    GitHubRepository[]
-  >([]);
+  ] = useState<GitHubRepository[]>([]);
 
   const [
     totalCount,
@@ -82,8 +80,7 @@ export default function Home() {
 
           const data =
             await searchRepositories({
-              query:
-                trimmedQuery,
+              query: trimmedQuery,
               page: targetPage,
               perPage: PER_PAGE,
               sort: targetSort,
@@ -165,6 +162,40 @@ export default function Home() {
       ]
     );
 
+  /*
+   * GitHub does not provide an official
+   * "Trending" REST endpoint.
+   *
+   * We approximate trending repositories
+   * by looking for repositories created
+   * during the last 30 days with more
+   * than 100 stars, sorted by stars.
+   */
+  const handleTrending =
+    useCallback(() => {
+      const date =
+        new Date();
+
+      date.setDate(
+        date.getDate() - 30
+      );
+
+      const since = date
+        .toISOString()
+        .slice(0, 10);
+
+      const trendingQuery =
+        `created:>${since} stars:>100`;
+
+      setQuery(trendingQuery);
+
+      void loadRepositories(
+        1,
+        "stars",
+        trendingQuery
+      );
+    }, [loadRepositories]);
+
   const handleSortChange =
     useCallback(
       (
@@ -216,12 +247,7 @@ export default function Home() {
             "A" ||
           target.isContentEditable);
 
-      /*
-       * "/" focuses search only
-       * when the user is not
-       * interacting with another
-       * control.
-       */
+      // "/" focuses the search field
       if (
         event.key === "/" &&
         !isInteractive
@@ -238,11 +264,7 @@ export default function Home() {
         return;
       }
 
-      /*
-       * Arrow shortcuts should not
-       * interfere with inputs,
-       * links or buttons.
-       */
+      // Do not override controls
       if (
         isInteractive ||
         !hasSearched ||
@@ -310,38 +332,56 @@ export default function Home() {
   return (
     <div className="relative min-h-screen overflow-x-hidden">
       {/* Decorative rays */}
-      <div
+<div
   aria-hidden="true"
   className="
     pointer-events-none
     absolute
-    left-1/2
+    inset-x-0
     top-0
     z-0
-    h-[720px]
-    w-[1100px]
-    max-h-screen
-    max-w-none
-    -translate-x-1/2
-    bg-[url('/rays.svg')]
-    bg-contain
-    bg-top
-    bg-no-repeat
-    opacity-[0.6]
-
-    sm:h-[860px]
-    sm:w-[1400px]
-    sm:opacity-[0.7]
-
-    lg:h-[1060px]
-    lg:w-[1700px]
-    lg:opacity-[0.78]
+    h-screen
+    overflow-hidden
   "
-/>
+>
+  <div
+    className="
+      absolute
+      left-1/2
+      -top-[90px]
 
+      h-[900px]
+      w-[1250px]
+
+      max-w-none
+      -translate-x-1/2
+
+      bg-[url('/rays.svg')]
+      bg-contain
+      bg-center
+      bg-no-repeat
+
+      opacity-[0.6]
+
+      sm:-top-[120px]
+      sm:h-[1080px]
+      sm:w-[1550px]
+      sm:opacity-[0.7]
+
+      lg:-top-[150px]
+      lg:h-[1220px]
+      lg:w-[1850px]
+      lg:opacity-[0.78]
+    "
+  />
+</div>
       {/* Page content */}
       <div className="relative z-10 flex min-h-screen flex-col">
-        <Header />
+        <Header
+          onTrending={
+            handleTrending
+          }
+        />
 
         <main className="flex-1">
           <Hero

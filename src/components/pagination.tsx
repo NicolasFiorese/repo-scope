@@ -91,6 +91,7 @@ export function Pagination({
         }
         className="
           group
+          cursor-pointer
           flex
           h-10
           w-10
@@ -195,6 +196,7 @@ export function Pagination({
                   )
                 }
                 className={`
+                  cursor-pointer
                   flex
                   h-9
                   min-w-9
@@ -211,6 +213,8 @@ export function Pagination({
                   focus-visible:outline-none
                   focus-visible:ring-2
                   focus-visible:ring-[var(--coral-300)]
+
+                  disabled:cursor-not-allowed
 
                   sm:h-8
                   sm:min-w-8
@@ -251,6 +255,7 @@ export function Pagination({
         }
         className="
           group
+          cursor-pointer
           flex
           h-10
           w-10

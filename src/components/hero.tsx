@@ -185,6 +185,7 @@ export function Hero({
                 )
               }
               className="
+                cursor-pointer
                 rounded-full
                 border
                 border-[var(--line-1)]
