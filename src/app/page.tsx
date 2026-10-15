@@ -311,32 +311,33 @@ export default function Home() {
     <div className="relative min-h-screen overflow-x-hidden">
       {/* Decorative rays */}
       <div
-        aria-hidden="true"
-        className="
-          pointer-events-none
-          absolute
-          left-1/2
-          top-0
-          z-0
-          h-[720px]
-          w-[1100px]
-          max-w-none
-          -translate-x-1/2
-          bg-[url('/rays.svg')]
-          bg-contain
-          bg-top
-          bg-no-repeat
-          opacity-[0.6]
+  aria-hidden="true"
+  className="
+    pointer-events-none
+    absolute
+    left-1/2
+    top-0
+    z-0
+    h-[720px]
+    w-[1100px]
+    max-h-screen
+    max-w-none
+    -translate-x-1/2
+    bg-[url('/rays.svg')]
+    bg-contain
+    bg-top
+    bg-no-repeat
+    opacity-[0.6]
 
-          sm:h-[860px]
-          sm:w-[1400px]
-          sm:opacity-[0.7]
+    sm:h-[860px]
+    sm:w-[1400px]
+    sm:opacity-[0.7]
 
-          lg:h-[1060px]
-          lg:w-[1700px]
-          lg:opacity-[0.78]
-        "
-      />
+    lg:h-[1060px]
+    lg:w-[1700px]
+    lg:opacity-[0.78]
+  "
+/>
 
       {/* Page content */}
       <div className="relative z-10 flex min-h-screen flex-col">
