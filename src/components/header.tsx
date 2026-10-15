@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 function SearchIcon() {
   return (
     <svg
@@ -92,8 +94,9 @@ export function Header() {
         "
       >
         {/* Logo */}
-        <a
-          href="#"
+        <Link
+          href="/"
+          aria-label="repo·scope home"
           className="
             col-start-1
             row-start-1
@@ -103,6 +106,12 @@ export function Header() {
             gap-2
             font-semibold
             text-[var(--coral-300)]
+
+            focus-visible:outline-none
+            focus-visible:ring-2
+            focus-visible:ring-[var(--coral-300)]
+            focus-visible:ring-offset-4
+            focus-visible:ring-offset-[var(--blue-600)]
 
             sm:gap-3
           "
@@ -119,7 +128,7 @@ export function Header() {
           >
             repo·scope
           </span>
-        </a>
+        </Link>
 
         {/* Navigation */}
         <nav
@@ -142,8 +151,8 @@ export function Header() {
             lg:row-start-1
           "
         >
-          <a
-            href="#"
+          <Link
+            href="/"
             aria-current="page"
             className="
               flex
@@ -172,12 +181,14 @@ export function Header() {
           >
             <SearchIcon />
             Search
-          </a>
+          </Link>
 
-          <a
-            href="#"
+          {/* Decorative Figma item — not part of challenge scope */}
+          <span
+            aria-hidden="true"
             className="
               flex
+              cursor-default
               items-center
               gap-1.5
               rounded-full
@@ -185,13 +196,6 @@ export function Header() {
               py-2
               text-[12px]
               text-[var(--ink-1)]
-              transition
-
-              hover:bg-white/10
-
-              focus-visible:outline-none
-              focus-visible:ring-2
-              focus-visible:ring-[var(--coral-300)]
 
               sm:gap-2
               sm:px-4
@@ -200,12 +204,13 @@ export function Header() {
           >
             <TrendingIcon />
             Trending
-          </a>
+          </span>
 
           <a
             href="https://docs.github.com/en/rest/search/search"
             target="_blank"
             rel="noreferrer"
+            aria-label="GitHub REST API documentation, opens in a new tab"
             className="
               flex
               items-center
@@ -238,6 +243,7 @@ export function Header() {
           href="https://github.com"
           target="_blank"
           rel="noreferrer"
+          aria-label="GitHub, opens in a new tab"
           className="
             col-start-2
             row-start-1

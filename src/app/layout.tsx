@@ -3,6 +3,7 @@ import {
   Figtree,
   JetBrains_Mono,
 } from "next/font/google";
+
 import "./globals.css";
 
 const figtree = Figtree({
@@ -15,19 +16,51 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
 });
 
+const title =
+  "repo·scope — GitHub Repository Search";
+
+const description =
+  "Search and explore public GitHub repositories by stars, language, topics, and freshness.";
+
 export const metadata: Metadata = {
-  title: "repo·scope — GitHub Search",
-  description:
-    "Search and explore public GitHub repositories.",
+  title,
+  description,
+
+  applicationName: "repo·scope",
+
+  openGraph: {
+    title,
+    description,
+    siteName: "repo·scope",
+    type: "website",
+  },
+
+  twitter: {
+    card: "summary",
+    title,
+    description,
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${figtree.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`
+        ${figtree.variable}
+        ${jetbrainsMono.variable}
+        h-full
+        antialiased
+      `}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="flex min-h-full flex-col">
         {children}
       </body>
     </html>

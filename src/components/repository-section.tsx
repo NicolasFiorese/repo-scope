@@ -108,6 +108,8 @@ export function RepositorySection({
 
   return (
     <section
+      aria-labelledby="repositories-heading"
+      aria-busy={loading}
       className="
         relative
         z-10
@@ -152,6 +154,7 @@ export function RepositorySection({
         >
           <div>
             <h2
+              id="repositories-heading"
               className="
                 text-[20px]
                 font-medium
@@ -164,6 +167,7 @@ export function RepositorySection({
 
             {!loading && !error && (
               <p
+                aria-live="polite"
                 className="
                   mt-1
                   text-[13px]
@@ -179,8 +183,8 @@ export function RepositorySection({
                 {totalCount > 1000 && (
                   <>
                     {" "}
-                    · GitHub lists the
-                    first 1,000
+                    · GitHub lists the first
+                    1,000
                   </>
                 )}
               </p>
@@ -199,6 +203,8 @@ export function RepositorySection({
 
         {loading && (
           <div
+            role="status"
+            aria-live="polite"
             className="
               flex
               min-h-[280px]
@@ -252,9 +258,9 @@ export function RepositorySection({
 
         {!loading &&
           !error &&
-          repositories.length ===
-            0 && (
+          repositories.length === 0 && (
             <div
+              role="status"
               className="
                 flex
                 min-h-[280px]

@@ -24,13 +24,20 @@ import type {
 const PER_PAGE = 12;
 
 export default function Home() {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] =
+    useState("");
 
-  const [repositories, setRepositories] =
-    useState<GitHubRepository[]>([]);
+  const [
+    repositories,
+    setRepositories,
+  ] = useState<
+    GitHubRepository[]
+  >([]);
 
-  const [totalCount, setTotalCount] =
-    useState(0);
+  const [
+    totalCount,
+    setTotalCount,
+  ] = useState(0);
 
   const [loading, setLoading] =
     useState(false);
@@ -38,83 +45,95 @@ export default function Home() {
   const [error, setError] =
     useState<string | null>(null);
 
-  const [hasSearched, setHasSearched] =
-    useState(false);
+  const [
+    hasSearched,
+    setHasSearched,
+  ] = useState(false);
 
-  const [page, setPage] = useState(1);
+  const [page, setPage] =
+    useState(1);
 
   const [sort, setSort] =
-    useState<SortOption>("best-match");
+    useState<SortOption>(
+      "best-match"
+    );
 
-  const loadRepositories = useCallback(
-    async (
-      targetPage: number,
-      targetSort: SortOption,
-      searchQuery = query
-    ) => {
-      const trimmedQuery =
-        searchQuery.trim();
+  const loadRepositories =
+    useCallback(
+      async (
+        targetPage: number,
+        targetSort: SortOption,
+        searchQuery = query
+      ) => {
+        const trimmedQuery =
+          searchQuery.trim();
 
-      if (!trimmedQuery) return;
-
-      try {
-        setLoading(true);
-        setError(null);
-        setHasSearched(true);
-
-        setPage(targetPage);
-        setSort(targetSort);
-
-        const data =
-          await searchRepositories({
-            query: trimmedQuery,
-            page: targetPage,
-            perPage: PER_PAGE,
-            sort: targetSort,
-          });
-
-        setRepositories(data.items);
-        setTotalCount(
-          data.total_count
-        );
-      } catch (error) {
-        setRepositories([]);
-        setTotalCount(0);
-
-        if (
-          error instanceof
-            GitHubApiError &&
-          error.message ===
-            "GitHub rate limit reached."
-        ) {
-          if (error.retryAt) {
-            const retryDate =
-              new Date(
-                error.retryAt *
-                  1000
-              );
-
-            setError(
-              `GitHub rate limit reached. Try again after ${retryDate.toLocaleTimeString()}.`
-            );
-          } else {
-            setError(
-              "GitHub rate limit reached. Please wait a moment and try again."
-            );
-          }
-
+        if (!trimmedQuery) {
           return;
         }
 
-        setError(
-          "We couldn't load repositories. Please try again."
-        );
-      } finally {
-        setLoading(false);
-      }
-    },
-    [query]
-  );
+        try {
+          setLoading(true);
+          setError(null);
+          setHasSearched(true);
+
+          setPage(targetPage);
+          setSort(targetSort);
+
+          const data =
+            await searchRepositories({
+              query:
+                trimmedQuery,
+              page: targetPage,
+              perPage: PER_PAGE,
+              sort: targetSort,
+            });
+
+          setRepositories(
+            data.items
+          );
+
+          setTotalCount(
+            data.total_count
+          );
+        } catch (error) {
+          setRepositories([]);
+          setTotalCount(0);
+
+          if (
+            error instanceof
+              GitHubApiError &&
+            error.message ===
+              "GitHub rate limit reached."
+          ) {
+            if (error.retryAt) {
+              const retryDate =
+                new Date(
+                  error.retryAt *
+                    1000
+                );
+
+              setError(
+                `GitHub rate limit reached. Try again after ${retryDate.toLocaleTimeString()}.`
+              );
+            } else {
+              setError(
+                "GitHub rate limit reached. Please wait a moment and try again."
+              );
+            }
+
+            return;
+          }
+
+          setError(
+            "We couldn't load repositories. Please try again."
+          );
+        } finally {
+          setLoading(false);
+        }
+      },
+      [query]
+    );
 
   const handleSearch =
     useCallback(() => {
@@ -129,7 +148,9 @@ export default function Home() {
 
   const handleSuggestionSearch =
     useCallback(
-      (suggestion: string) => {
+      (
+        suggestion: string
+      ) => {
         setQuery(suggestion);
 
         void loadRepositories(
@@ -146,7 +167,9 @@ export default function Home() {
 
   const handleSortChange =
     useCallback(
-      (newSort: SortOption) => {
+      (
+        newSort: SortOption
+      ) => {
         void loadRepositories(
           1,
           newSort
@@ -157,7 +180,9 @@ export default function Home() {
 
   const handlePageChange =
     useCallback(
-      (newPage: number) => {
+      (
+        newPage: number
+      ) => {
         void loadRepositories(
           newPage,
           sort
@@ -174,21 +199,32 @@ export default function Home() {
       event: KeyboardEvent
     ) {
       const target =
-        event.target as HTMLElement;
+        event.target;
 
-      const isTyping =
-        target.tagName ===
+      const isInteractive =
+        target instanceof
+          HTMLElement &&
+        (target.tagName ===
           "INPUT" ||
-        target.tagName ===
-          "TEXTAREA" ||
-        target.tagName ===
-          "SELECT" ||
-        target.isContentEditable;
+          target.tagName ===
+            "TEXTAREA" ||
+          target.tagName ===
+            "SELECT" ||
+          target.tagName ===
+            "BUTTON" ||
+          target.tagName ===
+            "A" ||
+          target.isContentEditable);
 
-      // "/" focuses the repository search
+      /*
+       * "/" focuses search only
+       * when the user is not
+       * interacting with another
+       * control.
+       */
       if (
         event.key === "/" &&
-        !isTyping
+        !isInteractive
       ) {
         event.preventDefault();
 
@@ -202,9 +238,13 @@ export default function Home() {
         return;
       }
 
-      // Don't change pages while typing
+      /*
+       * Arrow shortcuts should not
+       * interfere with inputs,
+       * links or buttons.
+       */
       if (
-        isTyping ||
+        isInteractive ||
         !hasSearched ||
         loading
       ) {
@@ -270,33 +310,33 @@ export default function Home() {
   return (
     <div className="relative min-h-screen overflow-x-hidden">
       {/* Decorative rays */}
-     <div
-  aria-hidden="true"
-  className="
-    pointer-events-none
-    absolute
-    left-1/2
-    top-0
-    z-0
-    h-[720px]
-    w-[1100px]
-    max-w-none
-    -translate-x-1/2
-    bg-[url('/rays.svg')]
-    bg-contain
-    bg-top
-    bg-no-repeat
-    opacity-[0.6]
+      <div
+        aria-hidden="true"
+        className="
+          pointer-events-none
+          absolute
+          left-1/2
+          top-0
+          z-0
+          h-[720px]
+          w-[1100px]
+          max-w-none
+          -translate-x-1/2
+          bg-[url('/rays.svg')]
+          bg-contain
+          bg-top
+          bg-no-repeat
+          opacity-[0.6]
 
-    sm:h-[860px]
-    sm:w-[1400px]
-    sm:opacity-[0.7]
+          sm:h-[860px]
+          sm:w-[1400px]
+          sm:opacity-[0.7]
 
-    lg:h-[1060px]
-    lg:w-[1700px]
-    lg:opacity-[0.78]
-  "
-/>
+          lg:h-[1060px]
+          lg:w-[1700px]
+          lg:opacity-[0.78]
+        "
+      />
 
       {/* Page content */}
       <div className="relative z-10 flex min-h-screen flex-col">
