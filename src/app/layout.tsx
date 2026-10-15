@@ -23,16 +23,25 @@ const description =
   "Search and explore public GitHub repositories by stars, language, topics, and freshness.";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    "https://repo-scope-gamma.vercel.app"
+  ),
+
   title,
   description,
 
   applicationName: "repo·scope",
+
+  alternates: {
+    canonical: "/",
+  },
 
   openGraph: {
     title,
     description,
     siteName: "repo·scope",
     type: "website",
+    url: "/",
   },
 
   twitter: {

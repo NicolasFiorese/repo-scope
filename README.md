@@ -2,58 +2,90 @@
 
 A responsive GitHub repository search interface built with Next.js, TypeScript and Tailwind CSS.
 
-repo·scope allows users to search public GitHub repositories, inspect relevant repository information, sort results and navigate through paginated results while following the provided Figma design.
+🔗 **Live Demo:**  
+https://repo-scope-gamma.vercel.app/
+
+---
+
+## About the project
+
+`repo·scope` is a front-end challenge built around the GitHub REST API.
+
+The main goal is to provide a polished interface for searching and exploring public GitHub repositories while reproducing the supplied Figma design as closely as possible.
+
+The application supports repository search, sorting, pagination, responsive layouts, loading and error states, keyboard shortcuts and direct links to GitHub repositories.
+
+---
 
 ## Features
 
 - Search public GitHub repositories
-- Display repository:
-  - Name and GitHub link
-  - Description
-  - Primary language
-  - Star count
-  - Last updated date
-- Sort by:
+- Sort results by:
   - Best match
   - Most stars
   - Recently updated
 - Pagination
-- Display 6 repositories initially with the option to reveal all 12 results on the current page
+- Up to 12 repositories per API page
+- Initial display of 6 cards with the option to reveal all 12
+- Repository information including:
+  - Repository name
+  - Description
+  - Primary language
+  - Star count
+  - Last updated date
+  - Direct GitHub link
+- Search suggestion chips
+- Trending repository discovery
 - Loading state
 - Empty results state
 - API error state
-- GitHub rate-limit handling
-- Responsive layout for mobile, tablet and desktop
+- GitHub rate limit handling
+- Responsive mobile, tablet and desktop layouts
 - Keyboard shortcuts
-- Accessible focus and interaction states
+- Accessible focus states
+- Semantic HTML
 - SEO metadata
 - End-to-end tests with Playwright
 
-## Tech Stack
+---
 
-- Next.js 16 — App Router
+## Tech stack
+
+- [Next.js](https://nextjs.org/)
 - React
 - TypeScript
 - Tailwind CSS
 - GitHub REST API
 - Playwright
+- Vercel
 
-## Getting Started
+I chose to build the interface with custom components instead of introducing a component library such as shadcn/ui.
 
-Clone the repository:
+For this challenge, the UI is highly specific to the supplied Figma design, so implementing the components directly gave me more control over sizing, spacing, glass effects, responsive behavior and interaction states without adding unnecessary abstraction.
+
+---
+
+## Getting started
+
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/NicolasFiorese/repo-scope.git
+```
+
+### 2. Enter the project directory
+
+```bash
 cd repo-scope
 ```
 
-Install the dependencies:
+### 3. Install dependencies
 
 ```bash
 npm install
 ```
 
-Start the development server:
+### 4. Start the development server
 
 ```bash
 npm run dev
@@ -65,54 +97,86 @@ Open:
 http://localhost:3000
 ```
 
-## Available Scripts
+No environment variables are required.
 
-Run the development server:
+---
+
+## Available scripts
+
+### Development
 
 ```bash
 npm run dev
 ```
 
-Run ESLint:
+Starts the Next.js development server.
 
-```bash
-npm run lint
-```
-
-Create a production build:
+### Production build
 
 ```bash
 npm run build
 ```
 
-Start the production server:
+Creates a production build of the application.
+
+### Production server
 
 ```bash
 npm run start
 ```
 
-Run the end-to-end test suite:
+Runs the production build.
+
+### Lint
+
+```bash
+npm run lint
+```
+
+Runs ESLint.
+
+### End-to-end tests
 
 ```bash
 npm run test:e2e
 ```
 
-Open Playwright UI mode:
+Runs the Playwright test suite.
+
+### Playwright UI
 
 ```bash
 npm run test:e2e:ui
 ```
 
-## Testing
+Opens the Playwright interactive test interface.
 
-End-to-end tests are implemented with Playwright.
+---
 
-The test suite covers the required scenarios:
+## End-to-end testing
 
-1. Searching for repositories and displaying the results correctly.
-2. Displaying the error state when the GitHub API request fails.
+I used Playwright for the required end-to-end coverage.
 
-GitHub API requests are mocked during the E2E tests. This keeps the tests deterministic and prevents them from depending on network availability or GitHub API rate limits.
+The test suite covers two core scenarios:
+
+### Successful repository search
+
+The GitHub API request is intercepted and replaced with mocked repository data.
+
+The test verifies that:
+
+- a search can be submitted;
+- repository results are rendered;
+- repository links are displayed correctly;
+- the result count is shown correctly.
+
+### API failure
+
+The GitHub API request is intercepted and forced to return an HTTP error.
+
+The test verifies that the application displays the expected error state.
+
+Mocking the API makes these tests deterministic and prevents them from depending on network availability or GitHub API rate limits.
 
 Run the tests with:
 
@@ -120,123 +184,280 @@ Run the tests with:
 npm run test:e2e
 ```
 
-## Technical Decisions
+---
 
-### GitHub REST API
+## Technical decisions
 
-The application uses the GitHub Repository Search REST API.
+### GitHub API integration
 
-The API is called directly from the client and no authentication token is exposed in the frontend.
+I consume GitHub's public Repository Search REST API directly from the browser.
 
-Because unauthenticated GitHub Search requests are rate limited, the interface explicitly handles rate-limit errors and displays retry information when available.
+The application does not require authentication or a GitHub personal access token.
 
-GitHub Search exposes a maximum of the first 1,000 matching results, so pagination respects this API limitation.
+I deliberately avoided exposing a GitHub token in client-side code because any secret included in the browser bundle would be publicly accessible.
 
-### Component Architecture
+For this challenge, using the unauthenticated public API also allowed me to implement and demonstrate the required rate-limit error state.
 
-The interface is divided into reusable components with separate responsibilities:
+---
 
-```text
-Header
-Hero
-SearchField
-SearchSummary
-RepositorySection
-RepositoryCard
-SortControl
-Pagination
-Footer
-```
+### Trending behavior
 
-API logic, types and formatting utilities are also separated from the presentation components.
+The supplied interface included a `Trending` navigation item, but the challenge did not define any expected behavior for it.
 
-### Custom Components
+Rather than leaving the control non-functional, I decided to implement a useful interpretation of repository trending.
 
-The challenge recommends shadcn/ui, but does not require it.
+GitHub's REST API does not expose an official Trending endpoint, so I implemented a practical approximation using the Repository Search API.
 
-Custom components were used because the supplied Figma design has a very specific visual language involving glass surfaces, gradients, pills, glows, borders and interaction states.
+When `Trending` is selected, I search for repositories that:
 
-Implementing these components directly with Tailwind CSS provided more control over visual fidelity while keeping the dependency footprint small.
+- were created within the last 30 days;
+- have more than 100 stars;
+- are sorted by star count.
 
-### Responsive Design
-
-The supplied Figma focuses on the desktop layout.
-
-Mobile and tablet layouts were adapted from the same visual system while preserving typography, colors, spacing, hierarchy and interaction patterns.
-
-The interface was tested across representative viewport widths including:
+The generated GitHub search query follows this format:
 
 ```text
-390px   Mobile
-768px   Tablet
-1024px  Desktop transition
-1440px  Desktop
+created:>YYYY-MM-DD stars:>100
 ```
 
-### Accessibility
+This keeps the control functional while staying entirely within the GitHub Search API used by the rest of the application.
 
-The project includes accessibility improvements such as:
+---
 
-- Semantic HTML
-- Accessible labels for form controls
-- Visible keyboard focus states
-- `aria-current` for active navigation and pagination
-- `aria-pressed` for sorting controls
-- `aria-busy` for repository loading
-- Live regions for loading and result updates
-- Alert semantics for API errors
-- Accessible pagination labels
-- Keyboard shortcuts that do not override focused interactive controls
+### GitHub search result limit
 
-### Keyboard Shortcuts
+GitHub's Search API only exposes the first 1,000 results of a search.
 
-On desktop:
+Because each application page requests 12 repositories, I calculate pagination using:
 
 ```text
-/   Focus the repository search field
-←   Previous results page
-→   Next results page
+min(total_count, 1000)
 ```
 
-Keyboard shortcuts are disabled while the user is interacting with inputs, links or buttons.
+This prevents the interface from offering pages that GitHub cannot return.
 
-### SEO
+The UI also informs the user when a search contains more than 1,000 repositories.
 
-The application includes metadata for:
+---
 
-- Page title
-- Description
-- Open Graph
-- Twitter cards
-- Search-engine indexing
+### Result card expansion
 
-## Design
+Each GitHub API page contains up to 12 repositories.
 
-The interface follows the supplied Figma reference, including:
+To match the supplied design more closely, I initially display 6 cards.
 
-- Typography
-- Colors
-- Spacing
-- Glass surfaces
-- Search field
-- Repository cards
-- Sorting controls
-- Pagination
-- Hover states
-- Focus states
-- Responsive adaptations
+The user can then select:
 
-The decorative radial background is exported from the Figma as an SVG, while the remaining interface is implemented with HTML, CSS and React components.
+```text
+6 more cards (12 per page)
+```
 
-## Project Structure
+to reveal the remaining results from the same API page.
+
+This does not perform another network request.
+
+Changing the page or sorting mode resets the expanded state.
+
+---
+
+### Sorting
+
+The interface supports:
+
+- Best match
+- Most stars
+- Recently updated
+
+The selected sorting option is sent to the GitHub Search API and the current page is reset to page 1 when sorting changes.
+
+---
+
+### Rate limit handling
+
+Unauthenticated GitHub Search API requests have a restricted request quota.
+
+I detect GitHub rate-limit responses and, when the API provides a reset timestamp, display the approximate time at which the user can retry.
+
+Other API or network failures fall back to a generic error state.
+
+---
+
+## Architecture
+
+I split the interface into focused components rather than implementing the full page in a single file.
+
+The main page is responsible for application state and GitHub API interactions, while visual and interaction-specific responsibilities are delegated to individual components.
+
+Examples include:
+
+- `Header`
+- `Hero`
+- `SearchField`
+- `SearchSummary`
+- `RepositorySection`
+- `RepositoryCard`
+- `SortControl`
+- `Pagination`
+- `Footer`
+
+The GitHub API logic is isolated in:
+
+```text
+src/lib/github.ts
+```
+
+Shared GitHub types are stored in:
+
+```text
+src/types/github.ts
+```
+
+Formatting utilities are stored separately under:
+
+```text
+src/utils/
+```
+
+This keeps API concerns, UI concerns and utility logic separated.
+
+---
+
+## Responsive design
+
+The interface was designed and tested for mobile, tablet and desktop layouts.
+
+The repository grid adapts across breakpoints:
+
+```text
+Mobile  → 1 column
+Tablet  → 2 columns
+Desktop → 3 columns
+```
+
+The header also changes layout depending on available width.
+
+On smaller screens, the logo and GitHub button remain on the first row while the navigation moves to a second centered row.
+
+Search controls, sorting controls and pagination were also adjusted to remain usable on smaller screens.
+
+---
+
+## Accessibility
+
+I included accessibility considerations throughout the implementation.
+
+These include:
+
+- semantic `header`, `main`, `section`, `nav` and `footer` elements;
+- descriptive `aria-label` attributes;
+- `aria-current` for current navigation and pagination states;
+- `aria-pressed` for sorting controls;
+- `aria-live` for dynamic result information;
+- `role="status"` for loading and empty states;
+- `role="alert"` for API errors;
+- visible keyboard focus states;
+- accessible repository links;
+- keyboard-compatible buttons and pagination;
+- decorative SVG elements hidden from assistive technologies.
+
+---
+
+## Keyboard shortcuts
+
+The application includes lightweight keyboard navigation.
+
+### Focus search
+
+Press:
+
+```text
+/
+```
+
+to focus the repository search field.
+
+### Pagination
+
+When focus is not inside another interactive control:
+
+```text
+←
+```
+
+moves to the previous page.
+
+```text
+→
+```
+
+moves to the next page.
+
+The shortcuts intentionally do not override normal behavior while the user is typing or interacting with links, buttons, selects or editable elements.
+
+---
+
+## SEO
+
+I configured metadata using the Next.js App Router metadata API.
+
+The project includes:
+
+- page title;
+- page description;
+- application name;
+- canonical URL;
+- Open Graph metadata;
+- Twitter metadata;
+- index/follow robots configuration;
+- English document language.
+
+Production metadata is based on:
+
+```text
+https://repo-scope-gamma.vercel.app
+```
+
+---
+
+## Design implementation
+
+The supplied Figma file was used as the visual reference for the interface.
+
+I reproduced the main design characteristics including:
+
+- blue background;
+- coral accent palette;
+- radial ray composition;
+- glass-style surfaces;
+- rounded navigation;
+- large hero typography;
+- gradient search field;
+- repository card grid;
+- sorting control;
+- pagination;
+- responsive spacing;
+- hover feedback;
+- visible focus states;
+- subtle transitions.
+
+The decorative radial background and project logo are exported SVG assets from the supplied design.
+
+Where appropriate, I translated design-system interaction notes into CSS states such as hover, focus and active feedback.
+
+---
+
+## Project structure
 
 ```text
 repo-scope/
+│
 ├── public/
+│   ├── logo-repo.svg
 │   └── rays.svg
 │
 ├── src/
 │   ├── app/
+│   │   ├── favicon.ico
 │   │   ├── globals.css
 │   │   ├── layout.tsx
 │   │   └── page.tsx
@@ -266,12 +487,25 @@ repo-scope/
 │       └── repository-search.spec.ts
 │
 ├── playwright.config.ts
-└── package.json
+├── package.json
+└── README.md
 ```
 
-## Final Validation
+---
 
-Before submission, the project can be validated with:
+## Deployment
+
+The production version is deployed on Vercel:
+
+https://repo-scope-gamma.vercel.app/
+
+The Vercel project is connected to the GitHub repository, so updates pushed to the production branch can trigger new deployments automatically.
+
+---
+
+## Final validation
+
+Before submission, I validate the project using:
 
 ```bash
 npm run lint
@@ -279,4 +513,10 @@ npm run build
 npm run test:e2e
 ```
 
-All three commands should complete successfully.
+This verifies code quality, the production build and the required end-to-end flows.
+
+---
+
+## Author
+
+Developed by **Nicolas Fiorese**.
