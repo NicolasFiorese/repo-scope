@@ -24,8 +24,16 @@ import type {
 const PER_PAGE = 12;
 
 export default function Home() {
+  // What is currently written in the search input.
   const [query, setQuery] =
     useState("");
+
+  // The query that actually generated
+  // the repositories currently displayed.
+  const [
+    activeQuery,
+    setActiveQuery,
+  ] = useState("");
 
   const [
     repositories,
@@ -61,7 +69,7 @@ export default function Home() {
       async (
         targetPage: number,
         targetSort: SortOption,
-        searchQuery = query
+        searchQuery: string
       ) => {
         const trimmedQuery =
           searchQuery.trim();
@@ -74,9 +82,6 @@ export default function Home() {
           setLoading(true);
           setError(null);
           setHasSearched(true);
-
-          setPage(targetPage);
-          setSort(targetSort);
 
           const data =
             await searchRepositories({
@@ -93,6 +98,18 @@ export default function Home() {
           setTotalCount(
             data.total_count
           );
+
+          /*
+           * Result-related state is only
+           * updated after a successful
+           * repository request.
+           */
+          setActiveQuery(
+            trimmedQuery
+          );
+
+          setPage(targetPage);
+          setSort(targetSort);
         } catch (error) {
           setRepositories([]);
           setTotalCount(0);
@@ -129,17 +146,19 @@ export default function Home() {
           setLoading(false);
         }
       },
-      [query]
+      []
     );
 
   const handleSearch =
     useCallback(() => {
       void loadRepositories(
         1,
-        sort
+        sort,
+        query
       );
     }, [
       loadRepositories,
+      query,
       sort,
     ]);
 
@@ -166,7 +185,7 @@ export default function Home() {
    * GitHub does not provide an official
    * "Trending" REST endpoint.
    *
-   * We approximate trending repositories
+   * I approximate trending repositories
    * by looking for repositories created
    * during the last 30 days with more
    * than 100 stars, sorted by stars.
@@ -201,12 +220,20 @@ export default function Home() {
       (
         newSort: SortOption
       ) => {
+        if (!activeQuery) {
+          return;
+        }
+
         void loadRepositories(
           1,
-          newSort
+          newSort,
+          activeQuery
         );
       },
-      [loadRepositories]
+      [
+        activeQuery,
+        loadRepositories,
+      ]
     );
 
   const handlePageChange =
@@ -214,12 +241,18 @@ export default function Home() {
       (
         newPage: number
       ) => {
+        if (!activeQuery) {
+          return;
+        }
+
         void loadRepositories(
           newPage,
-          sort
+          sort,
+          activeQuery
         );
       },
       [
+        activeQuery,
         loadRepositories,
         sort,
       ]
@@ -247,7 +280,7 @@ export default function Home() {
             "A" ||
           target.isContentEditable);
 
-      // "/" focuses the search field
+      // "/" focuses the search field.
       if (
         event.key === "/" &&
         !isInteractive
@@ -264,7 +297,7 @@ export default function Home() {
         return;
       }
 
-      // Do not override controls
+      // Do not override controls.
       if (
         isInteractive ||
         !hasSearched ||
@@ -332,49 +365,50 @@ export default function Home() {
   return (
     <div className="relative min-h-screen overflow-x-hidden">
       {/* Decorative rays */}
-<div
-  aria-hidden="true"
-  className="
-    pointer-events-none
-    absolute
-    inset-x-0
-    top-0
-    z-0
-    h-screen
-    overflow-hidden
-  "
->
-  <div
-    className="
-      absolute
-      left-1/2
-      -top-[90px]
+      <div
+        aria-hidden="true"
+        className="
+          pointer-events-none
+          absolute
+          inset-x-0
+          top-0
+          z-0
+          h-screen
+          overflow-hidden
+        "
+      >
+        <div
+          className="
+            absolute
+            left-1/2
+            -top-[90px]
 
-      h-[900px]
-      w-[1250px]
+            h-[900px]
+            w-[1250px]
 
-      max-w-none
-      -translate-x-1/2
+            max-w-none
+            -translate-x-1/2
 
-      bg-[url('/rays.svg')]
-      bg-contain
-      bg-center
-      bg-no-repeat
+            bg-[url('/rays.svg')]
+            bg-contain
+            bg-center
+            bg-no-repeat
 
-      opacity-[0.6]
+            opacity-[0.6]
 
-      sm:-top-[120px]
-      sm:h-[1080px]
-      sm:w-[1550px]
-      sm:opacity-[0.7]
+            sm:-top-[120px]
+            sm:h-[1080px]
+            sm:w-[1550px]
+            sm:opacity-[0.7]
 
-      lg:-top-[150px]
-      lg:h-[1220px]
-      lg:w-[1850px]
-      lg:opacity-[0.78]
-    "
-  />
-</div>
+            lg:-top-[150px]
+            lg:h-[1220px]
+            lg:w-[1850px]
+            lg:opacity-[0.78]
+          "
+        />
+      </div>
+
       {/* Page content */}
       <div className="relative z-10 flex min-h-screen flex-col">
         <Header
@@ -386,6 +420,9 @@ export default function Home() {
         <main className="flex-1">
           <Hero
             query={query}
+            activeQuery={
+              activeQuery
+            }
             totalCount={
               totalCount
             }

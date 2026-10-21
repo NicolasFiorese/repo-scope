@@ -1,32 +1,47 @@
 import { formatCompactNumber } from "@/utils/format-number";
 
 interface SearchSummaryProps {
-  query: string;
+  activeQuery: string;
   totalCount: number;
   page: number;
 }
 
 export function SearchSummary({
-  query,
+  activeQuery,
   totalCount,
   page,
 }: SearchSummaryProps) {
-  if (!query || totalCount === 0) {
+  if (
+    !activeQuery ||
+    totalCount === 0
+  ) {
     return null;
   }
 
-  const maxResults = Math.min(totalCount, 1000);
-  const totalPages = Math.ceil(maxResults / 12);
+  const maxResults =
+    Math.min(
+      totalCount,
+      1000
+    );
+
+  const totalPages =
+    Math.ceil(
+      maxResults / 12
+    );
 
   return (
     <div
       className="
         mt-6
-        flex items-center gap-2
+        flex
+        items-center
+        gap-2
         rounded-full
-        border border-[var(--line-1)]
+        border
+        border-[var(--line-1)]
         bg-[var(--surface-deep)]
-        px-4 py-2
+        px-4
+        py-2
         text-[13px]
         backdrop-blur-md
       "
@@ -39,7 +54,7 @@ export function SearchSummary({
       </span>
 
       <span className="font-medium text-[var(--coral-100)]">
-        {query}
+        {activeQuery}
       </span>
 
       <span
@@ -58,7 +73,10 @@ export function SearchSummary({
           text-[var(--ink-2)]
         "
       >
-        {formatCompactNumber(totalCount)} repos
+        {formatCompactNumber(
+          totalCount
+        )}{" "}
+        repos
       </span>
 
       <span
@@ -77,7 +95,8 @@ export function SearchSummary({
           text-[var(--ink-2)]
         "
       >
-        page {page} of {totalPages}
+        page {page} of{" "}
+        {totalPages}
       </span>
     </div>
   );

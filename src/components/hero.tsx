@@ -3,6 +3,7 @@ import { SearchSummary } from "@/components/search-summary";
 
 interface HeroProps {
   query: string;
+  activeQuery: string;
   totalCount: number;
   page: number;
   onQueryChange: (value: string) => void;
@@ -21,6 +22,7 @@ const suggestions = [
 
 export function Hero({
   query,
+  activeQuery,
   totalCount,
   page,
   onQueryChange,
@@ -32,7 +34,8 @@ export function Hero({
       className="
         relative
         mx-auto
-        flex w-full
+        flex
+        w-full
         max-w-[1184px]
         flex-col
         items-center
@@ -50,12 +53,15 @@ export function Hero({
       <div
         className="
           mb-5
-          flex items-center
+          flex
+          items-center
           gap-2
           rounded-full
-          border border-[var(--line-1)]
+          border
+          border-[var(--line-1)]
           bg-[var(--surface-glass)]
-          px-3 py-1.5
+          px-3
+          py-1.5
           backdrop-blur-sm
 
           sm:mb-6
@@ -65,7 +71,8 @@ export function Hero({
         <span
           aria-hidden="true"
           className="
-            h-2 w-2
+            h-2
+            w-2
             rounded-full
             bg-[var(--coral-500)]
             shadow-[0_0_10px_rgba(255,129,112,0.65)]
@@ -145,7 +152,9 @@ export function Hero({
       >
         <SearchField
           query={query}
-          onQueryChange={onQueryChange}
+          onQueryChange={
+            onQueryChange
+          }
           onSearch={onSearch}
         />
       </div>
@@ -190,7 +199,8 @@ export function Hero({
                 border
                 border-[var(--line-1)]
                 bg-transparent
-                px-3 py-1.5
+                px-3
+                py-1.5
                 leading-none
                 text-[var(--ink-2)]
                 transition
@@ -213,8 +223,12 @@ export function Hero({
       </div>
 
       <SearchSummary
-        query={query}
-        totalCount={totalCount}
+        activeQuery={
+          activeQuery
+        }
+        totalCount={
+          totalCount
+        }
         page={page}
       />
     </section>
