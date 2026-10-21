@@ -1,7 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 
+export type HeaderView = "search" | "trending";
+
 interface HeaderProps {
+  activeView: HeaderView;
+  onSearch: () => void;
   onTrending: () => void;
 }
 
@@ -77,7 +81,10 @@ function GitHubIcon() {
   );
 }
 
-export function Header({ onTrending }: HeaderProps) {
+export function Header({ activeView, onSearch, onTrending }: HeaderProps) {
+  const searchIsActive = activeView === "search";
+  const trendingIsActive = activeView === "trending";
+
   return (
     <header
       className="
@@ -161,24 +168,20 @@ export function Header({ onTrending }: HeaderProps) {
           {/* Search */}
           <Link
             href="/"
-            aria-current="page"
-            className="
+            onClick={onSearch}
+            aria-current={searchIsActive ? "page" : undefined}
+            className={`
               flex
               items-center
               gap-1.5
               rounded-full
               border
-              border-white/[0.13]
-              bg-white/[0.075]
               px-3
               py-2
               text-[12px]
-              text-[var(--ink-1)]
               backdrop-blur-[1px]
               transition
               duration-200
-
-              hover:bg-white/[0.10]
 
               focus-visible:outline-none
               focus-visible:ring-2
@@ -187,7 +190,24 @@ export function Header({ onTrending }: HeaderProps) {
               sm:gap-2
               sm:px-4
               sm:text-sm
-            "
+
+              ${
+                searchIsActive
+                  ? `
+                    border-white/[0.13]
+                    bg-white/[0.075]
+                    text-[var(--ink-1)]
+                  `
+                  : `
+                    border-transparent
+                    bg-transparent
+                    text-[var(--ink-1)]
+
+                    hover:bg-white/[0.08]
+                    hover:text-[var(--coral-100)]
+                  `
+              }
+            `}
           >
             <SearchIcon />
             Search
@@ -198,21 +218,20 @@ export function Header({ onTrending }: HeaderProps) {
             type="button"
             onClick={onTrending}
             aria-label="Show trending repositories"
-            className="
+            aria-current={trendingIsActive ? "page" : undefined}
+            className={`
               flex
               cursor-pointer
               items-center
               gap-1.5
               rounded-full
+              border
               px-3
               py-2
               text-[12px]
-              text-[var(--ink-1)]
+              backdrop-blur-[1px]
               transition
               duration-200
-
-              hover:bg-white/[0.08]
-              hover:text-[var(--coral-100)]
 
               focus-visible:outline-none
               focus-visible:ring-2
@@ -221,7 +240,24 @@ export function Header({ onTrending }: HeaderProps) {
               sm:gap-2
               sm:px-4
               sm:text-sm
-            "
+
+              ${
+                trendingIsActive
+                  ? `
+                    border-white/[0.13]
+                    bg-white/[0.075]
+                    text-[var(--ink-1)]
+                  `
+                  : `
+                    border-transparent
+                    bg-transparent
+                    text-[var(--ink-1)]
+
+                    hover:bg-white/[0.08]
+                    hover:text-[var(--coral-100)]
+                  `
+              }
+            `}
           >
             <TrendingIcon />
             Trending
@@ -238,6 +274,8 @@ export function Header({ onTrending }: HeaderProps) {
               items-center
               gap-1.5
               rounded-full
+              border
+              border-transparent
               px-3
               py-2
               text-[12px]

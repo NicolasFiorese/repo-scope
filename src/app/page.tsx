@@ -9,6 +9,7 @@ import { RepositorySection } from "@/components/repository-section";
 
 import { GitHubApiError, searchRepositories } from "@/lib/github";
 
+import type { HeaderView } from "@/components/header";
 import type { GitHubRepository, SortOption } from "@/types/github";
 
 const PER_PAGE = 12;
@@ -20,6 +21,9 @@ export default function Home() {
   // The query that actually generated
   // the repositories currently displayed.
   const [activeQuery, setActiveQuery] = useState("");
+
+  // Controls which navigation item is visually active.
+  const [activeView, setActiveView] = useState<HeaderView>("search");
 
   const [repositories, setRepositories] = useState<GitHubRepository[]>([]);
 
@@ -96,17 +100,46 @@ export default function Home() {
     []
   );
 
+  const handleSearchNavigation = useCallback(() => {
+    setActiveView("search");
+  }, []);
+
   const handleSearch = useCallback(() => {
-    void loadRepositories(1, sort, query);
-  }, [loadRepositories, query, sort]);
+    /*
+     * Trending forces the "stars" sort mode.
+     *
+     * When the user leaves Trending by performing
+     * a regular search, restore GitHub's default
+     * Best match behavior.
+     *
+     * If the user is already in Search, preserve
+     * any sorting option they selected manually.
+     */
+    const targetSort: SortOption =
+      activeView === "trending" ? "best-match" : sort;
+
+    setActiveView("search");
+
+    void loadRepositories(1, targetSort, query);
+  }, [activeView, loadRepositories, query, sort]);
 
   const handleSuggestionSearch = useCallback(
     (suggestion: string) => {
+      /*
+       * Suggestions behave as regular searches.
+       * Leaving Trending therefore restores
+       * Best match instead of keeping the
+       * automatically selected stars sort.
+       */
+      const targetSort: SortOption =
+        activeView === "trending" ? "best-match" : sort;
+
+      setActiveView("search");
       setQuery(suggestion);
 
-      void loadRepositories(1, sort, suggestion);
+      void loadRepositories(1, targetSort, suggestion);
     },
-    [loadRepositories, sort]
+    [activeView, loadRepositories, sort]
   );
 
   /*
@@ -119,6 +152,8 @@ export default function Home() {
    * than 100 stars, sorted by stars.
    */
   const handleTrending = useCallback(() => {
+    setActiveView("trending");
+
     const date = new Date();
 
     date.setDate(date.getDate() - 30);
@@ -256,7 +291,11 @@ export default function Home() {
 
       {/* Page content */}
       <div className="relative z-10 flex min-h-screen flex-col">
-        <Header onTrending={handleTrending} />
+        <Header
+          activeView={activeView}
+          onSearch={handleSearchNavigation}
+          onTrending={handleTrending}
+        />
 
         <main className="flex-1">
           <Hero
