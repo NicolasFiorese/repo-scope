@@ -11,23 +11,13 @@ export function SearchSummary({
   totalCount,
   page,
 }: SearchSummaryProps) {
-  if (
-    !activeQuery ||
-    totalCount === 0
-  ) {
+  if (!activeQuery || totalCount === 0) {
     return null;
   }
 
-  const maxResults =
-    Math.min(
-      totalCount,
-      1000
-    );
+  const maxResults = Math.min(totalCount, 1000);
 
-  const totalPages =
-    Math.ceil(
-      maxResults / 12
-    );
+  const totalPages = Math.ceil(maxResults / 12);
 
   return (
     <div
@@ -46,15 +36,29 @@ export function SearchSummary({
         backdrop-blur-md
       "
     >
-      <span
-        aria-hidden="true"
-        className="text-[var(--coral-300)]"
-      >
+      <span aria-hidden="true" className="text-[var(--coral-300)]">
         ★
       </span>
 
-      <span className="font-medium text-[var(--coral-100)]">
-        {activeQuery}
+      <span className="font-medium text-[var(--coral-100)]">{activeQuery}</span>
+
+      <span
+        className="
+          font-[family-name:var(--font-jetbrains-mono)]
+          text-[var(--ink-3)]
+        "
+      >
+        ·
+      </span>
+
+      <span
+        className="
+          font-[family-name:var(--font-jetbrains-mono)]
+          font-medium
+          text-[var(--ink-2)]
+        "
+      >
+        {formatCompactNumber(totalCount)} repos
       </span>
 
       <span
@@ -73,30 +77,7 @@ export function SearchSummary({
           text-[var(--ink-2)]
         "
       >
-        {formatCompactNumber(
-          totalCount
-        )}{" "}
-        repos
-      </span>
-
-      <span
-        className="
-          font-[family-name:var(--font-jetbrains-mono)]
-          text-[var(--ink-3)]
-        "
-      >
-        ·
-      </span>
-
-      <span
-        className="
-          font-[family-name:var(--font-jetbrains-mono)]
-          font-medium
-          text-[var(--ink-2)]
-        "
-      >
-        page {page} of{" "}
-        {totalPages}
+        page {page} of {totalPages}
       </span>
     </div>
   );

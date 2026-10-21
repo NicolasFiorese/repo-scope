@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
-import {
-  Figtree,
-  JetBrains_Mono,
-} from "next/font/google";
+import { Figtree, JetBrains_Mono } from "next/font/google";
 
 import "./globals.css";
 
@@ -16,16 +13,13 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
 });
 
-const title =
-  "repo·scope — GitHub Repository Search";
+const title = "repo·scope — GitHub Repository Search";
 
 const description =
   "Search and explore public GitHub repositories by stars, language, topics, and freshness.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    "https://repo-scope-gamma.vercel.app"
-  ),
+  metadataBase: new URL("https://repo-scope-gamma.vercel.app"),
 
   title,
   description,
@@ -56,9 +50,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: LayoutProps<"/">) {
+export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
@@ -69,9 +61,7 @@ export default function RootLayout({
         antialiased
       `}
     >
-      <body className="flex min-h-full flex-col">
-        {children}
-      </body>
+      <body className="flex min-h-full flex-col">{children}</body>
     </html>
   );
 }

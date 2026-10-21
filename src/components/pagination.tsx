@@ -5,26 +5,13 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
-function getVisiblePages(
-  page: number,
-  totalPages: number
-) {
+function getVisiblePages(page: number, totalPages: number) {
   if (totalPages <= 6) {
-    return Array.from(
-      { length: totalPages },
-      (_, index) => index + 1
-    );
+    return Array.from({ length: totalPages }, (_, index) => index + 1);
   }
 
   if (page <= 4) {
-    return [
-      1,
-      2,
-      3,
-      4,
-      "...",
-      totalPages,
-    ];
+    return [1, 2, 3, 4, "...", totalPages];
   }
 
   if (page >= totalPages - 3) {
@@ -38,15 +25,7 @@ function getVisiblePages(
     ];
   }
 
-  return [
-    1,
-    "...",
-    page - 1,
-    page,
-    page + 1,
-    "...",
-    totalPages,
-  ];
+  return [1, "...", page - 1, page, page + 1, "...", totalPages];
 }
 
 export function Pagination({
@@ -59,11 +38,7 @@ export function Pagination({
     return null;
   }
 
-  const visiblePages =
-    getVisiblePages(
-      page,
-      totalPages
-    );
+  const visiblePages = getVisiblePages(page, totalPages);
 
   return (
     <nav
@@ -83,12 +58,8 @@ export function Pagination({
       <button
         type="button"
         aria-label="Previous page"
-        disabled={
-          page === 1 || disabled
-        }
-        onClick={() =>
-          onPageChange(page - 1)
-        }
+        disabled={page === 1 || disabled}
+        onClick={() => onPageChange(page - 1)}
         className="
           group
           cursor-pointer
@@ -145,13 +116,12 @@ export function Pagination({
           backdrop-blur-md
         "
       >
-        {visiblePages.map(
-          (item, index) => {
-            if (item === "...") {
-              return (
-                <span
-                  key={`ellipsis-${index}`}
-                  className="
+        {visiblePages.map((item, index) => {
+          if (item === "...") {
+            return (
+              <span
+                key={`ellipsis-${index}`}
+                className="
                     flex
                     h-9
                     min-w-7
@@ -167,35 +137,25 @@ export function Pagination({
                     sm:px-1
                     sm:text-[12px]
                   "
-                >
-                  …
-                </span>
-              );
-            }
+              >
+                …
+              </span>
+            );
+          }
 
-            const pageNumber =
-              Number(item);
+          const pageNumber = Number(item);
 
-            const isCurrent =
-              pageNumber === page;
+          const isCurrent = pageNumber === page;
 
-            return (
-              <button
-                key={pageNumber}
-                type="button"
-                aria-label={`Go to page ${pageNumber}`}
-                aria-current={
-                  isCurrent
-                    ? "page"
-                    : undefined
-                }
-                disabled={disabled}
-                onClick={() =>
-                  onPageChange(
-                    pageNumber
-                  )
-                }
-                className={`
+          return (
+            <button
+              key={pageNumber}
+              type="button"
+              aria-label={`Go to page ${pageNumber}`}
+              aria-current={isCurrent ? "page" : undefined}
+              disabled={disabled}
+              onClick={() => onPageChange(pageNumber)}
+              className={`
                   cursor-pointer
                   flex
                   h-9
@@ -234,25 +194,19 @@ export function Pagination({
                       `
                   }
                 `}
-              >
-                {pageNumber}
-              </button>
-            );
-          }
-        )}
+            >
+              {pageNumber}
+            </button>
+          );
+        })}
       </div>
 
       {/* Next */}
       <button
         type="button"
         aria-label="Next page"
-        disabled={
-          page === totalPages ||
-          disabled
-        }
-        onClick={() =>
-          onPageChange(page + 1)
-        }
+        disabled={page === totalPages || disabled}
+        onClick={() => onPageChange(page + 1)}
         className="
           group
           cursor-pointer

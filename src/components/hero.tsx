@@ -8,9 +8,7 @@ interface HeroProps {
   page: number;
   onQueryChange: (value: string) => void;
   onSearch: () => void;
-  onSuggestionSearch: (
-    suggestion: string
-  ) => void;
+  onSuggestionSearch: (suggestion: string) => void;
 }
 
 const suggestions = [
@@ -109,15 +107,11 @@ export function Hero({
           lg:tracking-[-0.035em]
         "
       >
-        <span className="text-[var(--coral-300)]">
-          Find the code
-        </span>
+        <span className="text-[var(--coral-300)]">Find the code</span>
 
         <br />
 
-        <span className="text-[var(--ink-1)]">
-          worth starring.
-        </span>
+        <span className="text-[var(--ink-1)]">worth starring.</span>
       </h1>
 
       <p
@@ -136,9 +130,8 @@ export function Hero({
           lg:text-[19px]
         "
       >
-        Search millions of public repositories.
-        Sort by stars or freshness, skim what
-        matters, jump straight to the source.
+        Search millions of public repositories. Sort by stars or freshness, skim
+        what matters, jump straight to the source.
       </p>
 
       <div
@@ -152,9 +145,7 @@ export function Hero({
       >
         <SearchField
           query={query}
-          onQueryChange={
-            onQueryChange
-          }
+          onQueryChange={onQueryChange}
           onSearch={onSearch}
         />
       </div>
@@ -183,17 +174,12 @@ export function Hero({
           Try
         </span>
 
-        {suggestions.map(
-          (suggestion) => (
-            <button
-              key={suggestion}
-              type="button"
-              onClick={() =>
-                onSuggestionSearch(
-                  suggestion
-                )
-              }
-              className="
+        {suggestions.map((suggestion) => (
+          <button
+            key={suggestion}
+            type="button"
+            onClick={() => onSuggestionSearch(suggestion)}
+            className="
                 cursor-pointer
                 rounded-full
                 border
@@ -215,20 +201,15 @@ export function Hero({
                 focus-visible:ring-2
                 focus-visible:ring-[var(--coral-300)]
               "
-            >
-              {suggestion}
-            </button>
-          )
-        )}
+          >
+            {suggestion}
+          </button>
+        ))}
       </div>
 
       <SearchSummary
-        activeQuery={
-          activeQuery
-        }
-        totalCount={
-          totalCount
-        }
+        activeQuery={activeQuery}
+        totalCount={totalCount}
         page={page}
       />
     </section>

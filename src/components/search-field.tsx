@@ -9,9 +9,7 @@ export function SearchField({
   onQueryChange,
   onSearch,
 }: SearchFieldProps) {
-  function handleSubmit(
-    event: React.FormEvent<HTMLFormElement>
-  ) {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     onSearch();
   }
@@ -21,10 +19,7 @@ export function SearchField({
       onSubmit={handleSubmit}
       className="relative mx-auto w-full max-w-[680px]"
     >
-      <label
-        htmlFor="repository-search"
-        className="sr-only"
-      >
+      <label htmlFor="repository-search" className="sr-only">
         Search repositories
       </label>
 
@@ -74,9 +69,7 @@ export function SearchField({
           name="search"
           type="search"
           value={query}
-          onChange={(event) =>
-            onQueryChange(event.target.value)
-          }
+          onChange={(event) => onQueryChange(event.target.value)}
           placeholder="Search repositories..."
           aria-keyshortcuts="/"
           className="

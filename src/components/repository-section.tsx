@@ -6,10 +6,7 @@ import { Pagination } from "@/components/pagination";
 import { RepositoryCard } from "@/components/repository-card";
 import { SortControl } from "@/components/sort-control";
 
-import type {
-  GitHubRepository,
-  SortOption,
-} from "@/types/github";
+import type { GitHubRepository, SortOption } from "@/types/github";
 
 interface RepositorySectionProps {
   repositories: GitHubRepository[];
@@ -146,81 +143,52 @@ export function RepositorySection({
   onSortChange,
   onPageChange,
 }: RepositorySectionProps) {
-  const [
-    expandedResultsKey,
-    setExpandedResultsKey,
-  ] = useState<string | null>(null);
+  const [expandedResultsKey, setExpandedResultsKey] = useState<string | null>(
+    null
+  );
 
   const resultsKey = `${page}-${sort}-${repositories
-    .map(
-      (repository) =>
-        repository.id
-    )
+    .map((repository) => repository.id)
     .join("-")}`;
 
-  const showAll =
-    expandedResultsKey === resultsKey;
+  const showAll = expandedResultsKey === resultsKey;
 
   if (!hasSearched) {
     return null;
   }
 
-  const hasRepositories =
-    repositories.length > 0;
+  const hasRepositories = repositories.length > 0;
 
-  const maxResults = Math.min(
-    totalCount,
-    1000
-  );
+  const maxResults = Math.min(totalCount, 1000);
 
-  const totalPages = Math.ceil(
-    maxResults / PER_PAGE
-  );
+  const totalPages = Math.ceil(maxResults / PER_PAGE);
 
-  const firstResult =
-    (page - 1) * PER_PAGE + 1;
+  const firstResult = (page - 1) * PER_PAGE + 1;
 
   const lastResult = Math.min(
-    firstResult +
-      repositories.length -
-      1,
+    firstResult + repositories.length - 1,
     maxResults
   );
 
-  const visibleRepositories =
-    showAll
-      ? repositories
-      : repositories.slice(
-          0,
-          INITIAL_VISIBLE
-        );
+  const visibleRepositories = showAll
+    ? repositories
+    : repositories.slice(0, INITIAL_VISIBLE);
 
-  const hiddenCount = Math.max(
-    repositories.length -
-      INITIAL_VISIBLE,
-    0
-  );
+  const hiddenCount = Math.max(repositories.length - INITIAL_VISIBLE, 0);
 
-  function handleSortChange(
-    value: SortOption
-  ) {
+  function handleSortChange(value: SortOption) {
     setExpandedResultsKey(null);
     onSortChange(value);
   }
 
-  function handlePageChange(
-    newPage: number
-  ) {
+  function handlePageChange(newPage: number) {
     setExpandedResultsKey(null);
     onPageChange(newPage);
   }
 
   function handleToggleCards() {
-    setExpandedResultsKey(
-      (current) =>
-        current === resultsKey
-          ? null
-          : resultsKey
+    setExpandedResultsKey((current) =>
+      current === resultsKey ? null : resultsKey
     );
   }
 
@@ -284,33 +252,20 @@ export function RepositorySection({
               Repositories
             </h2>
 
-            {!loading &&
-              hasRepositories && (
-                <p
-                  aria-live="polite"
-                  className="
+            {!loading && hasRepositories && (
+              <p
+                aria-live="polite"
+                className="
                     mt-1
                     text-[13px]
                     text-[var(--ink-3)]
                   "
-                >
-                  Showing{" "}
-                  {firstResult}–
-                  {lastResult} of{" "}
-                  {totalCount.toLocaleString(
-                    "en-US"
-                  )}
-
-                  {totalCount >
-                    1000 && (
-                    <>
-                      {" "}
-                      · GitHub lists
-                      the first 1,000
-                    </>
-                  )}
-                </p>
-              )}
+              >
+                Showing {firstResult}–{lastResult} of{" "}
+                {totalCount.toLocaleString("en-US")}
+                {totalCount > 1000 && <> · GitHub lists the first 1,000</>}
+              </p>
+            )}
 
             {loading && (
               <p
@@ -322,19 +277,13 @@ export function RepositorySection({
                   text-[var(--ink-3)]
                 "
               >
-                Loading
-                repositories...
+                Loading repositories...
               </p>
             )}
           </div>
 
           <div className="w-full lg:w-auto">
-            <SortControl
-              value={sort}
-              onChange={
-                handleSortChange
-              }
-            />
+            <SortControl value={sort} onChange={handleSortChange} />
           </div>
         </div>
 
@@ -352,15 +301,10 @@ export function RepositorySection({
               "
             >
               {Array.from({
-                length:
-                  INITIAL_VISIBLE,
-              }).map(
-                (_, index) => (
-                  <RepositoryCardSkeleton
-                    key={index}
-                  />
-                )
-              )}
+                length: INITIAL_VISIBLE,
+              }).map((_, index) => (
+                <RepositoryCardSkeleton key={index} />
+              ))}
             </div>
 
             <div
@@ -381,13 +325,9 @@ export function RepositorySection({
             {totalPages > 1 && (
               <Pagination
                 page={page}
-                totalPages={
-                  totalPages
-                }
+                totalPages={totalPages}
                 disabled
-                onPageChange={
-                  handlePageChange
-                }
+                onPageChange={handlePageChange}
               />
             )}
 
@@ -404,20 +344,16 @@ export function RepositorySection({
                 lg:block
               "
             >
-              Tip: use ← → to
-              change pages, / to
-              search.
+              Tip: use ← → to change pages, / to search.
             </p>
           </>
         )}
 
         {/* Non-destructive error */}
-        {!loading &&
-          error &&
-          hasRepositories && (
-            <div
-              role="alert"
-              className="
+        {!loading && error && hasRepositories && (
+          <div
+            role="alert"
+            className="
                 mb-4
                 rounded-[14px]
                 border
@@ -427,36 +363,34 @@ export function RepositorySection({
                 py-3
                 text-left
               "
-            >
-              <p
-                className="
+          >
+            <p
+              className="
                   text-[14px]
                   font-medium
                   text-[var(--coral-100)]
                 "
-              >
-                Something went wrong.
-              </p>
+            >
+              Something went wrong.
+            </p>
 
-              <p
-                className="
+            <p
+              className="
                   mt-1
                   text-[13px]
                   text-[var(--ink-2)]
                 "
-              >
-                {error}
-              </p>
-            </div>
-          )}
+            >
+              {error}
+            </p>
+          </div>
+        )}
 
         {/* Full error state */}
-        {!loading &&
-          error &&
-          !hasRepositories && (
-            <div
-              role="alert"
-              className="
+        {!loading && error && !hasRepositories && (
+          <div
+            role="alert"
+            className="
                 flex
                 min-h-[480px]
                 flex-col
@@ -467,36 +401,34 @@ export function RepositorySection({
                 sm:min-h-[520px]
                 lg:min-h-[560px]
               "
-            >
-              <p
-                className="
+          >
+            <p
+              className="
                   text-[17px]
                   font-medium
                   text-[var(--ink-1)]
                 "
-              >
-                Something went wrong.
-              </p>
+            >
+              Something went wrong.
+            </p>
 
-              <p
-                className="
+            <p
+              className="
                   mt-2
                   text-[14px]
                   text-[var(--ink-3)]
                 "
-              >
-                {error}
-              </p>
-            </div>
-          )}
+            >
+              {error}
+            </p>
+          </div>
+        )}
 
         {/* Empty state */}
-        {!loading &&
-          !error &&
-          !hasRepositories && (
-            <div
-              role="status"
-              className="
+        {!loading && !error && !hasRepositories && (
+          <div
+            role="status"
+            className="
                 flex
                 min-h-[480px]
                 flex-col
@@ -507,36 +439,34 @@ export function RepositorySection({
                 sm:min-h-[520px]
                 lg:min-h-[560px]
               "
-            >
-              <p
-                className="
+          >
+            <p
+              className="
                   text-[17px]
                   font-medium
                   text-[var(--ink-1)]
                 "
-              >
-                No repositories found.
-              </p>
+            >
+              No repositories found.
+            </p>
 
-              <p
-                className="
+            <p
+              className="
                   mt-2
                   text-[14px]
                   text-[var(--ink-3)]
                 "
-              >
-                Try a different
-                search.
-              </p>
-            </div>
-          )}
+            >
+              Try a different search.
+            </p>
+          </div>
+        )}
 
         {/* Repository results */}
-        {!loading &&
-          hasRepositories && (
-            <>
-              <div
-                className="
+        {!loading && hasRepositories && (
+          <>
+            <div
+              className="
                   grid
                   grid-cols-1
                   gap-4
@@ -544,39 +474,21 @@ export function RepositorySection({
                   md:grid-cols-2
                   lg:grid-cols-3
                 "
-              >
-                {visibleRepositories.map(
-                  (
-                    repository,
-                    index
-                  ) => (
-                    <RepositoryCard
-                      key={
-                        repository.id
-                      }
-                      repository={
-                        repository
-                      }
-                      rank={
-                        (page -
-                          1) *
-                          PER_PAGE +
-                        index +
-                        1
-                      }
-                    />
-                  )
-                )}
-              </div>
+            >
+              {visibleRepositories.map((repository, index) => (
+                <RepositoryCard
+                  key={repository.id}
+                  repository={repository}
+                  rank={(page - 1) * PER_PAGE + index + 1}
+                />
+              ))}
+            </div>
 
-              {hiddenCount >
-                0 && (
-                <button
-                  type="button"
-                  onClick={
-                    handleToggleCards
-                  }
-                  className="
+            {hiddenCount > 0 && (
+              <button
+                type="button"
+                onClick={handleToggleCards}
+                className="
                     mt-4
                     flex
                     w-full
@@ -607,28 +519,22 @@ export function RepositorySection({
 
                     sm:text-[12px]
                   "
-                >
-                  {showAll
-                    ? "Show fewer cards"
-                    : `${hiddenCount} more cards (12 per page)`}
-                </button>
-              )}
+              >
+                {showAll
+                  ? "Show fewer cards"
+                  : `${hiddenCount} more cards (12 per page)`}
+              </button>
+            )}
 
-              <Pagination
-                page={page}
-                totalPages={
-                  totalPages
-                }
-                disabled={
-                  loading
-                }
-                onPageChange={
-                  handlePageChange
-                }
-              />
+            <Pagination
+              page={page}
+              totalPages={totalPages}
+              disabled={loading}
+              onPageChange={handlePageChange}
+            />
 
-              <p
-                className="
+            <p
+              className="
                   mt-3
                   hidden
                   text-center
@@ -638,13 +544,11 @@ export function RepositorySection({
 
                   lg:block
                 "
-              >
-                Tip: use ← → to
-                change pages, / to
-                search.
-              </p>
-            </>
-          )}
+            >
+              Tip: use ← → to change pages, / to search.
+            </p>
+          </>
+        )}
       </div>
     </section>
   );

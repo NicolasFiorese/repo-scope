@@ -23,10 +23,7 @@ const options: {
   },
 ];
 
-export function SortControl({
-  value,
-  onChange,
-}: SortControlProps) {
+export function SortControl({ value, onChange }: SortControlProps) {
   return (
     <div
       className="
@@ -44,17 +41,14 @@ export function SortControl({
       "
     >
       {options.map((option) => {
-        const isActive =
-          value === option.value;
+        const isActive = value === option.value;
 
         return (
           <button
             key={option.value}
             type="button"
             aria-pressed={isActive}
-            onClick={() =>
-              onChange(option.value)
-            }
+            onClick={() => onChange(option.value)}
             className={`
               cursor-pointer
               flex-1

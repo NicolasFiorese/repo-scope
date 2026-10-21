@@ -15,7 +15,4 @@ export interface GitHubSearchResponse {
   items: GitHubRepository[];
 }
 
-export type SortOption =
-  | "best-match"
-  | "stars"
-  | "updated";
+export type SortOption = "best-match" | "stars" | "updated";

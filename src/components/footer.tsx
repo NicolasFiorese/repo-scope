@@ -1,7 +1,7 @@
 export function Footer() {
   return (
-  <footer
-  className="
+    <footer
+      className="
     relative z-10
     mt-auto
     mx-auto
@@ -21,7 +21,7 @@ export function Footer() {
     sm:px-6
     sm:pb-8
   "
->
+    >
       <span>© repo·scope 2026</span>
 
       <span>

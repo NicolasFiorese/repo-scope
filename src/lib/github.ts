@@ -1,7 +1,4 @@
-import type {
-  GitHubSearchResponse,
-  SortOption,
-} from "@/types/github";
+import type { GitHubSearchResponse, SortOption } from "@/types/github";
 
 const GITHUB_API_URL = "https://api.github.com";
 
@@ -16,11 +13,7 @@ export class GitHubApiError extends Error {
   status: number;
   retryAt?: number;
 
-  constructor(
-    message: string,
-    status: number,
-    retryAt?: number
-  ) {
+  constructor(message: string, status: number, retryAt?: number) {
     super(message);
     this.name = "GitHubApiError";
     this.status = status;
@@ -55,21 +48,14 @@ export async function searchRepositories({
   );
 
   if (!response.ok) {
-    const remaining = response.headers.get(
-      "x-ratelimit-remaining"
-    );
+    const remaining = response.headers.get("x-ratelimit-remaining");
 
-    const resetHeader = response.headers.get(
-      "x-ratelimit-reset"
-    );
+    const resetHeader = response.headers.get("x-ratelimit-reset");
 
-    const retryAt = resetHeader
-      ? Number(resetHeader)
-      : undefined;
+    const retryAt = resetHeader ? Number(resetHeader) : undefined;
 
     const isRateLimited =
-      response.status === 429 ||
-      (response.status === 403 && remaining === "0");
+      response.status === 429 || (response.status === 403 && remaining === "0");
 
     if (isRateLimited) {
       throw new GitHubApiError(

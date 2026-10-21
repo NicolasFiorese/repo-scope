@@ -6,12 +6,8 @@ interface RepositoryCardProps {
   rank: number;
 }
 
-function getLanguageColor(
-  language: string | null
-) {
-  switch (
-    language?.toLowerCase()
-  ) {
+function getLanguageColor(language: string | null) {
+  switch (language?.toLowerCase()) {
     case "javascript":
       return "#F7DF1E";
 
@@ -65,11 +61,7 @@ function ClockIcon() {
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      <circle
-        cx="12"
-        cy="12"
-        r="8"
-      />
+      <circle cx="12" cy="12" r="8" />
 
       <path d="M12 8v4l2.5 1.5" />
     </svg>
@@ -98,76 +90,39 @@ function ExternalLinkIcon() {
   );
 }
 
-function formatRelativeDate(
-  dateString: string
-) {
-  const updatedDate =
-    new Date(dateString);
+function formatRelativeDate(dateString: string) {
+  const updatedDate = new Date(dateString);
 
   const now = new Date();
 
-  const differenceMs =
-    now.getTime() -
-    updatedDate.getTime();
+  const differenceMs = now.getTime() - updatedDate.getTime();
 
   if (differenceMs <= 0) {
     return "just now";
   }
 
-  const minutes =
-    Math.floor(
-      differenceMs /
-        (1000 * 60)
-    );
+  const minutes = Math.floor(differenceMs / (1000 * 60));
 
-  const hours =
-    Math.floor(
-      differenceMs /
-        (1000 * 60 * 60)
-    );
+  const hours = Math.floor(differenceMs / (1000 * 60 * 60));
 
-  const days =
-    Math.floor(
-      differenceMs /
-        (1000 *
-          60 *
-          60 *
-          24)
-    );
+  const days = Math.floor(differenceMs / (1000 * 60 * 60 * 24));
 
-  const weeks =
-    Math.floor(
-      days / 7
-    );
+  const weeks = Math.floor(days / 7);
 
-  const months =
-    Math.floor(
-      days / 30
-    );
+  const months = Math.floor(days / 30);
 
-  const years =
-    Math.floor(
-      days / 365
-    );
+  const years = Math.floor(days / 365);
 
   if (minutes < 1) {
     return "just now";
   }
 
   if (minutes < 60) {
-    return `${minutes} ${
-      minutes === 1
-        ? "minute"
-        : "minutes"
-    } ago`;
+    return `${minutes} ${minutes === 1 ? "minute" : "minutes"} ago`;
   }
 
   if (hours < 24) {
-    return `${hours} ${
-      hours === 1
-        ? "hour"
-        : "hours"
-    } ago`;
+    return `${hours} ${hours === 1 ? "hour" : "hours"} ago`;
   }
 
   if (days === 1) {
@@ -179,11 +134,7 @@ function formatRelativeDate(
   }
 
   if (weeks < 5) {
-    return `${weeks} ${
-      weeks === 1
-        ? "week"
-        : "weeks"
-    } ago`;
+    return `${weeks} ${weeks === 1 ? "week" : "weeks"} ago`;
   }
 
   if (months === 1) {
@@ -194,33 +145,15 @@ function formatRelativeDate(
     return `${months} months ago`;
   }
 
-  return `${years} ${
-    years === 1
-      ? "year"
-      : "years"
-  } ago`;
+  return `${years} ${years === 1 ? "year" : "years"} ago`;
 }
 
-export function RepositoryCard({
-  repository,
-  rank,
-}: RepositoryCardProps) {
-  const stars =
-    formatCompactNumber(
-      repository.stargazers_count
-    );
+export function RepositoryCard({ repository, rank }: RepositoryCardProps) {
+  const stars = formatCompactNumber(repository.stargazers_count);
 
-  const relativeUpdatedDate =
-    formatRelativeDate(
-      repository.updated_at
-    );
+  const relativeUpdatedDate = formatRelativeDate(repository.updated_at);
 
-  const [
-    owner,
-    repositoryName,
-  ] = repository.full_name.split(
-    "/"
-  );
+  const [owner, repositoryName] = repository.full_name.split("/");
 
   return (
     <article
@@ -302,20 +235,14 @@ export function RepositoryCard({
             text-[var(--coral-300)]
           "
         >
-          #
-          {String(rank).padStart(
-            2,
-            "0"
-          )}
+          #{String(rank).padStart(2, "0")}
         </span>
       </div>
 
       {/* Repository content */}
       <div className="relative z-10 mt-5 min-w-0">
         <a
-          href={
-            repository.html_url
-          }
+          href={repository.html_url}
           target="_blank"
           rel="noreferrer"
           className="
@@ -343,9 +270,7 @@ export function RepositoryCard({
             "
           >
             {owner}/
-            <span className="text-[var(--coral-200)]">
-              {repositoryName}
-            </span>
+            <span className="text-[var(--coral-200)]">{repositoryName}</span>
           </span>
 
           <span
@@ -373,8 +298,7 @@ export function RepositoryCard({
             text-[var(--ink-2)]
           "
         >
-          {repository.description ??
-            "No description available."}
+          {repository.description ?? "No description available."}
         </p>
       </div>
 
@@ -421,17 +345,11 @@ export function RepositoryCard({
               rounded-full
             "
             style={{
-              backgroundColor:
-                getLanguageColor(
-                  repository.language
-                ),
+              backgroundColor: getLanguageColor(repository.language),
             }}
           />
 
-          <span className="truncate">
-            {repository.language ??
-              "Unknown"}
-          </span>
+          <span className="truncate">{repository.language ?? "Unknown"}</span>
         </span>
 
         {/* Stars */}
@@ -453,16 +371,12 @@ export function RepositoryCard({
             <StarIcon />
           </span>
 
-          {repository.stargazers_count.toLocaleString(
-            "en-US"
-          )}
+          {repository.stargazers_count.toLocaleString("en-US")}
         </span>
 
         {/* Updated */}
         <time
-          dateTime={
-            repository.updated_at
-          }
+          dateTime={repository.updated_at}
           className="
             flex
             min-w-0
@@ -482,10 +396,7 @@ export function RepositoryCard({
             <ClockIcon />
           </span>
 
-          <span className="truncate">
-            Updated{" "}
-            {relativeUpdatedDate}
-          </span>
+          <span className="truncate">Updated {relativeUpdatedDate}</span>
         </time>
       </div>
     </article>

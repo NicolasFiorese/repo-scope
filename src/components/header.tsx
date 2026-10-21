@@ -77,9 +77,7 @@ function GitHubIcon() {
   );
 }
 
-export function Header({
-  onTrending,
-}: HeaderProps) {
+export function Header({ onTrending }: HeaderProps) {
   return (
     <header
       className="
