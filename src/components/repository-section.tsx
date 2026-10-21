@@ -18,6 +18,7 @@ interface RepositorySectionProps {
   sort: SortOption;
   onSortChange: (value: SortOption) => void;
   onPageChange: (page: number) => void;
+  onRetry: () => void;
 }
 
 const PER_PAGE = 12;
@@ -133,6 +134,40 @@ function RepositoryCardSkeleton() {
   );
 }
 
+function RetryButton({ onRetry }: { onRetry: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onRetry}
+      className="
+        cursor-pointer
+        rounded-full
+        border
+        border-[rgb(255_184_172_/_45%)]
+        bg-white/[0.06]
+        px-4
+        py-2
+        font-[family-name:var(--font-jetbrains-mono)]
+        text-[11px]
+        font-medium
+        text-[var(--coral-100)]
+        transition
+        duration-200
+
+        hover:-translate-y-px
+        hover:border-[var(--coral-300)]
+        hover:bg-white/[0.10]
+
+        focus-visible:outline-none
+        focus-visible:ring-2
+        focus-visible:ring-[var(--coral-300)]
+      "
+    >
+      Try again
+    </button>
+  );
+}
+
 export function RepositorySection({
   repositories,
   totalCount,
@@ -143,6 +178,7 @@ export function RepositorySection({
   sort,
   onSortChange,
   onPageChange,
+  onRetry,
 }: RepositorySectionProps) {
   const [expandedResultsKey, setExpandedResultsKey] = useState<string | null>(
     null
@@ -356,6 +392,9 @@ export function RepositorySection({
             role="alert"
             className="
               mb-4
+              flex
+              flex-col
+              gap-3
               rounded-[14px]
               border
               border-[rgb(255_184_172_/_35%)]
@@ -363,27 +402,37 @@ export function RepositorySection({
               px-4
               py-3
               text-left
+
+              sm:flex-row
+              sm:items-center
+              sm:justify-between
             "
           >
-            <p
-              className="
-                text-[14px]
-                font-medium
-                text-[var(--coral-100)]
-              "
-            >
-              Something went wrong.
-            </p>
+            <div>
+              <p
+                className="
+                  text-[14px]
+                  font-medium
+                  text-[var(--coral-100)]
+                "
+              >
+                Something went wrong.
+              </p>
 
-            <p
-              className="
-                mt-1
-                text-[13px]
-                text-[var(--ink-2)]
-              "
-            >
-              {error}
-            </p>
+              <p
+                className="
+                  mt-1
+                  text-[13px]
+                  text-[var(--ink-2)]
+                "
+              >
+                {error}
+              </p>
+            </div>
+
+            <div className="shrink-0">
+              <RetryButton onRetry={onRetry} />
+            </div>
           </div>
         )}
 
@@ -416,12 +465,17 @@ export function RepositorySection({
             <p
               className="
                 mt-2
+                max-w-[460px]
                 text-[14px]
                 text-[var(--ink-3)]
               "
             >
               {error}
             </p>
+
+            <div className="mt-5">
+              <RetryButton onRetry={onRetry} />
+            </div>
           </div>
         )}
 

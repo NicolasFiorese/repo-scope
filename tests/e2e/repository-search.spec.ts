@@ -452,4 +452,106 @@ test.describe("Repository search", () => {
      */
     expect(requests[1].sort).toBeNull();
   });
+
+  test("retries the last failed repository request", async ({ page }) => {
+    let requestCount = 0;
+
+    const requests: Array<{
+      query: string;
+      page: string | null;
+      sort: string | null;
+    }> = [];
+
+    await page.route("**/search/repositories**", async (route) => {
+      requestCount += 1;
+
+      const requestUrl = new URL(route.request().url());
+
+      requests.push({
+        query: requestUrl.searchParams.get("q") ?? "",
+        page: requestUrl.searchParams.get("page"),
+        sort: requestUrl.searchParams.get("sort"),
+      });
+
+      /*
+       * The first request fails.
+       */
+      if (requestCount === 1) {
+        await route.fulfill({
+          status: 500,
+          contentType: "application/json",
+          body: JSON.stringify({
+            message: "Internal Server Error",
+          }),
+        });
+
+        return;
+      }
+
+      /*
+       * The retry succeeds.
+       */
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          total_count: 1,
+          incomplete_results: false,
+          items: [createRepository(1, "vercel/recovered-repository")],
+        }),
+      });
+    });
+
+    await page.goto("/");
+
+    const searchInput = page.getByRole("searchbox", {
+      name: "Search repositories",
+    });
+
+    await searchInput.fill("vercel");
+
+    await page
+      .getByRole("button", {
+        name: "Search repositories",
+      })
+      .click();
+
+    const errorAlert = page.getByRole("alert").filter({
+      hasText: "Something went wrong.",
+    });
+
+    await expect(errorAlert).toBeVisible();
+
+    await expect(errorAlert).toContainText(
+      "We couldn't load repositories. Please try again."
+    );
+
+    const retryButton = page.getByRole("button", {
+      name: "Try again",
+    });
+
+    await expect(retryButton).toBeVisible();
+
+    await retryButton.click();
+
+    await expect(
+      page.getByRole("link", {
+        name: /vercel\/recovered-repository/i,
+      })
+    ).toBeVisible();
+
+    await expect(errorAlert).not.toBeVisible();
+
+    expect(requestCount).toBe(2);
+
+    /*
+     * Retry must repeat the exact
+     * failed repository request.
+     */
+    expect(requests[0]).toEqual(requests[1]);
+
+    expect(requests[1].query).toBe("vercel");
+    expect(requests[1].page).toBe("1");
+    expect(requests[1].sort).toBeNull();
+  });
 });

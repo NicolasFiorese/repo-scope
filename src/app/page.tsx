@@ -14,6 +14,12 @@ import type { GitHubRepository, SortOption } from "@/types/github";
 
 const PER_PAGE = 12;
 
+interface RepositoryRequest {
+  query: string;
+  page: number;
+  sort: SortOption;
+}
+
 export default function Home() {
   // What is currently written in the search input.
   const [query, setQuery] = useState("");
@@ -24,6 +30,12 @@ export default function Home() {
 
   // Controls which navigation item is visually active.
   const [activeView, setActiveView] = useState<HeaderView>("search");
+
+  // Stores the most recent attempted request so
+  // failed requests can be retried exactly.
+  const [lastRequest, setLastRequest] = useState<RepositoryRequest | null>(
+    null
+  );
 
   const [repositories, setRepositories] = useState<GitHubRepository[]>([]);
 
@@ -46,6 +58,12 @@ export default function Home() {
       if (!trimmedQuery) {
         return;
       }
+
+      setLastRequest({
+        query: trimmedQuery,
+        page: targetPage,
+        sort: targetSort,
+      });
 
       try {
         setLoading(true);
@@ -189,6 +207,18 @@ export default function Home() {
     [activeQuery, loadRepositories, sort]
   );
 
+  const handleRetry = useCallback(() => {
+    if (!lastRequest) {
+      return;
+    }
+
+    void loadRepositories(
+      lastRequest.page,
+      lastRequest.sort,
+      lastRequest.query
+    );
+  }, [lastRequest, loadRepositories]);
+
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       const target = event.target;
@@ -318,6 +348,7 @@ export default function Home() {
             sort={sort}
             onSortChange={handleSortChange}
             onPageChange={handlePageChange}
+            onRetry={handleRetry}
           />
         </main>
 
