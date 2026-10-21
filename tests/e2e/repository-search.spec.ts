@@ -291,4 +291,165 @@ test.describe("Repository search", () => {
 
     expect(requestedQueries).toEqual(["vercel", "vercel"]);
   });
+
+  test("activates Trending and uses Most stars sorting", async ({ page }) => {
+    const requestedQueries: string[] = [];
+    const requestedSorts: Array<string | null> = [];
+
+    await page.route("**/search/repositories**", async (route) => {
+      const requestUrl = new URL(route.request().url());
+
+      requestedQueries.push(requestUrl.searchParams.get("q") ?? "");
+      requestedSorts.push(requestUrl.searchParams.get("sort"));
+
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          total_count: 1,
+          incomplete_results: false,
+          items: [createRepository(1, "trending/popular-project")],
+        }),
+      });
+    });
+
+    await page.goto("/");
+
+    const searchNavigation = page.getByRole("link", {
+      name: "Search",
+      exact: true,
+    });
+
+    const trendingNavigation = page.getByRole("button", {
+      name: "Show trending repositories",
+    });
+
+    const mostStarsButton = page.getByRole("button", {
+      name: "Most stars",
+    });
+
+    await expect(searchNavigation).toHaveAttribute("aria-current", "page");
+
+    await trendingNavigation.click();
+
+    await expect(trendingNavigation).toHaveAttribute("aria-current", "page");
+
+    await expect(searchNavigation).not.toHaveAttribute("aria-current");
+
+    await expect(mostStarsButton).toHaveAttribute("aria-pressed", "true");
+
+    await expect(
+      page.getByRole("link", {
+        name: /trending\/popular-project/i,
+      })
+    ).toBeVisible();
+
+    expect(requestedQueries).toHaveLength(1);
+    expect(requestedQueries[0]).toContain("created:>");
+    expect(requestedQueries[0]).toContain("stars:>100");
+
+    expect(requestedSorts).toEqual(["stars"]);
+  });
+
+  test("returns to Search and Best match after searching from Trending", async ({
+    page,
+  }) => {
+    const requests: Array<{
+      query: string;
+      sort: string | null;
+    }> = [];
+
+    await page.route("**/search/repositories**", async (route) => {
+      const requestUrl = new URL(route.request().url());
+
+      const query = requestUrl.searchParams.get("q") ?? "";
+      const sort = requestUrl.searchParams.get("sort");
+
+      requests.push({
+        query,
+        sort,
+      });
+
+      const isTrending = query.includes("created:>");
+
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          total_count: 1,
+          incomplete_results: false,
+          items: [
+            createRepository(
+              isTrending ? 1 : 2,
+              isTrending ? "trending/popular-project" : "facebook/react"
+            ),
+          ],
+        }),
+      });
+    });
+
+    await page.goto("/");
+
+    const searchNavigation = page.getByRole("link", {
+      name: "Search",
+      exact: true,
+    });
+
+    const trendingNavigation = page.getByRole("button", {
+      name: "Show trending repositories",
+    });
+
+    const bestMatchButton = page.getByRole("button", {
+      name: "Best match",
+    });
+
+    const mostStarsButton = page.getByRole("button", {
+      name: "Most stars",
+    });
+
+    const searchInput = page.getByRole("searchbox", {
+      name: "Search repositories",
+    });
+
+    await trendingNavigation.click();
+
+    await expect(trendingNavigation).toHaveAttribute("aria-current", "page");
+
+    await expect(mostStarsButton).toHaveAttribute("aria-pressed", "true");
+
+    await searchInput.fill("react");
+
+    await page
+      .getByRole("button", {
+        name: "Search repositories",
+      })
+      .click();
+
+    await expect(searchNavigation).toHaveAttribute("aria-current", "page");
+
+    await expect(trendingNavigation).not.toHaveAttribute("aria-current");
+
+    await expect(bestMatchButton).toHaveAttribute("aria-pressed", "true");
+
+    await expect(mostStarsButton).toHaveAttribute("aria-pressed", "false");
+
+    await expect(
+      page.getByRole("link", {
+        name: /facebook\/react/i,
+      })
+    ).toBeVisible();
+
+    expect(requests).toHaveLength(2);
+
+    expect(requests[0].query).toContain("created:>");
+    expect(requests[0].sort).toBe("stars");
+
+    expect(requests[1].query).toBe("react");
+
+    /*
+     * GitHub Best match does not require
+     * an explicit "sort" query parameter.
+     */
+    expect(requests[1].sort).toBeNull();
+  });
 });
