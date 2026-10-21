@@ -77,8 +77,8 @@ export function SortControl({
               ${
                 isActive
                   ? `
-                    bg-[var(--coral-300)]
-                    text-[var(--blue-900)]
+                    bg-[var(--coral-400)]
+                    text-[var(--blue-950)]
                     shadow-[0_4px_14px_-5px_rgba(196,64,46,0.4)]
                   `
                   : `

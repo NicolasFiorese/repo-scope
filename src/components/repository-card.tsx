@@ -231,16 +231,16 @@ export function RepositoryCard({
         overflow-hidden
         rounded-[18px]
         border
-        border-[var(--line-1)]
-        bg-white/[0.075]
+        border-white/[0.13]
+        bg-white/[0.055]
         p-5
-        backdrop-blur-[4px]
+        backdrop-blur-[1px]
         transition-all
         duration-300
 
         hover:-translate-y-1
         hover:border-[rgb(255_129_112_/_45%)]
-        hover:bg-white/[0.10]
+        hover:bg-white/[0.085]
         hover:shadow-[0_18px_38px_-18px_rgba(0,40,140,0.85)]
 
         focus-within:ring-2
