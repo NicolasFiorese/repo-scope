@@ -46,3 +46,61 @@ body {
   color: var(--foreground);
   font-family: var(--font-figtree), sans-serif;
 }
+
+@keyframes repository-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.repository-card-enter {
+  opacity: 0;
+  animation: repository-card-enter 320ms ease-out forwards;
+}
+
+.skeleton-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgb(255 255 255 / 6%),
+    transparent
+  );
+  animation: skeleton-shimmer 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .repository-card-enter {
+    opacity: 1;
+    animation: none;
+    transform: none;
+  }
+
+  .skeleton-shimmer::after {
+    display: none;
+  }
+}

@@ -4,6 +4,7 @@ import { formatCompactNumber } from "@/utils/format-number";
 interface RepositoryCardProps {
   repository: GitHubRepository;
   rank: number;
+  animationIndex?: number;
 }
 
 function getLanguageColor(language: string | null) {
@@ -148,16 +149,26 @@ function formatRelativeDate(dateString: string) {
   return `${years} ${years === 1 ? "year" : "years"} ago`;
 }
 
-export function RepositoryCard({ repository, rank }: RepositoryCardProps) {
+export function RepositoryCard({
+  repository,
+  rank,
+  animationIndex = 0,
+}: RepositoryCardProps) {
   const stars = formatCompactNumber(repository.stargazers_count);
 
   const relativeUpdatedDate = formatRelativeDate(repository.updated_at);
 
   const [owner, repositoryName] = repository.full_name.split("/");
 
+  const animationDelay = Math.min(animationIndex, 5) * 45;
+
   return (
     <article
+      style={{
+        animationDelay: `${animationDelay}ms`,
+      }}
       className="
+        repository-card-enter
         group
         relative
         min-h-[190px]

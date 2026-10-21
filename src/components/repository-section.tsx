@@ -28,6 +28,7 @@ function RepositoryCardSkeleton() {
     <div
       aria-hidden="true"
       className="
+        skeleton-shimmer
         min-h-[220px]
         animate-pulse
         rounded-[20px]
@@ -256,10 +257,10 @@ export function RepositorySection({
               <p
                 aria-live="polite"
                 className="
-                    mt-1
-                    text-[13px]
-                    text-[var(--ink-3)]
-                  "
+                  mt-1
+                  text-[13px]
+                  text-[var(--ink-3)]
+                "
               >
                 Showing {firstResult}–{lastResult} of{" "}
                 {totalCount.toLocaleString("en-US")}
@@ -354,32 +355,32 @@ export function RepositorySection({
           <div
             role="alert"
             className="
-                mb-4
-                rounded-[14px]
-                border
-                border-[rgb(255_184_172_/_35%)]
-                bg-[rgb(196_64_46_/_12%)]
-                px-4
-                py-3
-                text-left
-              "
+              mb-4
+              rounded-[14px]
+              border
+              border-[rgb(255_184_172_/_35%)]
+              bg-[rgb(196_64_46_/_12%)]
+              px-4
+              py-3
+              text-left
+            "
           >
             <p
               className="
-                  text-[14px]
-                  font-medium
-                  text-[var(--coral-100)]
-                "
+                text-[14px]
+                font-medium
+                text-[var(--coral-100)]
+              "
             >
               Something went wrong.
             </p>
 
             <p
               className="
-                  mt-1
-                  text-[13px]
-                  text-[var(--ink-2)]
-                "
+                mt-1
+                text-[13px]
+                text-[var(--ink-2)]
+              "
             >
               {error}
             </p>
@@ -391,33 +392,33 @@ export function RepositorySection({
           <div
             role="alert"
             className="
-                flex
-                min-h-[480px]
-                flex-col
-                items-center
-                justify-center
-                text-center
+              flex
+              min-h-[480px]
+              flex-col
+              items-center
+              justify-center
+              text-center
 
-                sm:min-h-[520px]
-                lg:min-h-[560px]
-              "
+              sm:min-h-[520px]
+              lg:min-h-[560px]
+            "
           >
             <p
               className="
-                  text-[17px]
-                  font-medium
-                  text-[var(--ink-1)]
-                "
+                text-[17px]
+                font-medium
+                text-[var(--ink-1)]
+              "
             >
               Something went wrong.
             </p>
 
             <p
               className="
-                  mt-2
-                  text-[14px]
-                  text-[var(--ink-3)]
-                "
+                mt-2
+                text-[14px]
+                text-[var(--ink-3)]
+              "
             >
               {error}
             </p>
@@ -429,33 +430,33 @@ export function RepositorySection({
           <div
             role="status"
             className="
-                flex
-                min-h-[480px]
-                flex-col
-                items-center
-                justify-center
-                text-center
+              flex
+              min-h-[480px]
+              flex-col
+              items-center
+              justify-center
+              text-center
 
-                sm:min-h-[520px]
-                lg:min-h-[560px]
-              "
+              sm:min-h-[520px]
+              lg:min-h-[560px]
+            "
           >
             <p
               className="
-                  text-[17px]
-                  font-medium
-                  text-[var(--ink-1)]
-                "
+                text-[17px]
+                font-medium
+                text-[var(--ink-1)]
+              "
             >
               No repositories found.
             </p>
 
             <p
               className="
-                  mt-2
-                  text-[14px]
-                  text-[var(--ink-3)]
-                "
+                mt-2
+                text-[14px]
+                text-[var(--ink-3)]
+              "
             >
               Try a different search.
             </p>
@@ -467,19 +468,20 @@ export function RepositorySection({
           <>
             <div
               className="
-                  grid
-                  grid-cols-1
-                  gap-4
+                grid
+                grid-cols-1
+                gap-4
 
-                  md:grid-cols-2
-                  lg:grid-cols-3
-                "
+                md:grid-cols-2
+                lg:grid-cols-3
+              "
             >
               {visibleRepositories.map((repository, index) => (
                 <RepositoryCard
                   key={repository.id}
                   repository={repository}
                   rank={(page - 1) * PER_PAGE + index + 1}
+                  animationIndex={index}
                 />
               ))}
             </div>
@@ -489,36 +491,36 @@ export function RepositorySection({
                 type="button"
                 onClick={handleToggleCards}
                 className="
-                    mt-4
-                    flex
-                    w-full
-                    cursor-pointer
-                    items-center
-                    justify-center
-                    rounded-[14px]
-                    border
-                    border-dashed
-                    border-[var(--line-2)]
-                    bg-transparent
-                    px-4
-                    py-3
-                    font-[family-name:var(--font-jetbrains-mono)]
-                    text-[11px]
-                    font-medium
-                    text-[var(--ink-3)]
-                    transition
-                    duration-200
+                  mt-4
+                  flex
+                  w-full
+                  cursor-pointer
+                  items-center
+                  justify-center
+                  rounded-[14px]
+                  border
+                  border-dashed
+                  border-[var(--line-2)]
+                  bg-transparent
+                  px-4
+                  py-3
+                  font-[family-name:var(--font-jetbrains-mono)]
+                  text-[11px]
+                  font-medium
+                  text-[var(--ink-3)]
+                  transition
+                  duration-200
 
-                    hover:border-[rgb(255_184_172_/_55%)]
-                    hover:bg-white/[0.04]
-                    hover:text-[var(--coral-100)]
+                  hover:border-[rgb(255_184_172_/_55%)]
+                  hover:bg-white/[0.04]
+                  hover:text-[var(--coral-100)]
 
-                    focus-visible:outline-none
-                    focus-visible:ring-2
-                    focus-visible:ring-[var(--coral-300)]
+                  focus-visible:outline-none
+                  focus-visible:ring-2
+                  focus-visible:ring-[var(--coral-300)]
 
-                    sm:text-[12px]
-                  "
+                  sm:text-[12px]
+                "
               >
                 {showAll
                   ? "Show fewer cards"
@@ -535,15 +537,15 @@ export function RepositorySection({
 
             <p
               className="
-                  mt-3
-                  hidden
-                  text-center
-                  font-[family-name:var(--font-jetbrains-mono)]
-                  text-[11px]
-                  text-[var(--ink-3)]
+                mt-3
+                hidden
+                text-center
+                font-[family-name:var(--font-jetbrains-mono)]
+                text-[11px]
+                text-[var(--ink-3)]
 
-                  lg:block
-                "
+                lg:block
+              "
             >
               Tip: use ← → to change pages, / to search.
             </p>
