@@ -32,13 +32,14 @@ The application supports repository search, sorting, pagination, responsive layo
   - Description
   - Primary language
   - Star count
-  - Last updated date
+  - Relative last updated time
   - Direct GitHub link
 - Search suggestion chips
 - Trending repository discovery
-- Loading state
+- Skeleton loading state designed to reduce layout shift
 - Empty results state
 - API error state
+- Non-destructive API errors that preserve previously loaded results when possible
 - GitHub rate limit handling
 - Responsive mobile, tablet and desktop layouts
 - Keyboard shortcuts
@@ -46,6 +47,7 @@ The application supports repository search, sorting, pagination, responsive layo
 - Semantic HTML
 - SEO metadata
 - End-to-end tests with Playwright
+- Consistent code formatting with Prettier
 
 ---
 
@@ -57,6 +59,7 @@ The application supports repository search, sorting, pagination, responsive layo
 - Tailwind CSS
 - GitHub REST API
 - Playwright
+- Prettier
 - Vercel
 
 I chose to build the interface with custom components instead of introducing a component library such as shadcn/ui.
@@ -135,6 +138,22 @@ npm run lint
 
 Runs ESLint.
 
+### Format
+
+```bash
+npm run format
+```
+
+Formats the project using Prettier.
+
+### Format check
+
+```bash
+npm run format:check
+```
+
+Checks that all supported files follow the configured Prettier formatting rules.
+
 ### End-to-end tests
 
 ```bash
@@ -155,9 +174,9 @@ Opens the Playwright interactive test interface.
 
 ## End-to-end testing
 
-I used Playwright for the required end-to-end coverage.
+I use Playwright for end-to-end coverage.
 
-The test suite covers two core scenarios:
+The test suite currently covers four scenarios.
 
 ### Successful repository search
 
@@ -175,6 +194,20 @@ The test verifies that:
 The GitHub API request is intercepted and forced to return an HTTP error.
 
 The test verifies that the application displays the expected error state.
+
+### Unsubmitted search query regression
+
+The test verifies that typing a new value into the search field without submitting it does not change the active repository search.
+
+Pagination continues using the last submitted query rather than the current input value.
+
+This prevents the visible search input from becoming inconsistent with the repositories currently displayed.
+
+### Cleared search field regression
+
+The test verifies that clearing the search input does not invalidate the currently displayed results.
+
+Pagination continues working with the last successfully submitted search query even when the input is empty.
 
 Mocking the API makes these tests deterministic and prevents them from depending on network availability or GitHub API rate limits.
 
@@ -197,6 +230,20 @@ The application does not require authentication or a GitHub personal access toke
 I deliberately avoided exposing a GitHub token in client-side code because any secret included in the browser bundle would be publicly accessible.
 
 For this challenge, using the unauthenticated public API also allowed me to implement and demonstrate the required rate-limit error state.
+
+---
+
+### Search input and active search state
+
+I keep the current search input separate from the last successfully submitted search query.
+
+This prevents changes made while typing from immediately changing the context of the currently displayed results.
+
+For example, if I search for `vercel` and then type `react` without submitting it, the existing results and pagination continue to represent the `vercel` search.
+
+The same principle applies when the input is cleared: the current results remain valid until another search is submitted.
+
+This separation also prevents pagination and sorting from accidentally using an unsubmitted query.
 
 ---
 
@@ -260,6 +307,23 @@ Changing the page or sorting mode resets the expanded state.
 
 ---
 
+### Relative update time
+
+Repository cards display the last update using relative time instead of a raw calendar date.
+
+Examples include:
+
+```text
+Updated 2 hours ago
+Updated yesterday
+Updated 2 weeks ago
+Updated last month
+```
+
+This matches the supplied design more closely and makes repository freshness easier to scan.
+
+---
+
 ### Sorting
 
 The interface supports:
@@ -272,6 +336,28 @@ The selected sorting option is sent to the GitHub Search API and the current pag
 
 ---
 
+### Loading behavior
+
+I use repository card skeletons while new results are loading.
+
+The skeleton grid keeps approximately the same vertical space as the repository results, which reduces layout movement while the GitHub API request is in progress.
+
+Pagination is temporarily disabled during loading when appropriate.
+
+---
+
+### Error handling
+
+The interface supports API, network and GitHub rate-limit failures.
+
+If an error occurs before any repository results have been loaded, I display a dedicated full error state.
+
+If an error occurs while previously loaded repositories are still available, I preserve those results and display a compact error message above them instead of clearing the entire section.
+
+This prevents temporary API failures from unnecessarily destroying useful content already visible to the user.
+
+---
+
 ### Rate limit handling
 
 Unauthenticated GitHub Search API requests have a restricted request quota.
@@ -279,6 +365,26 @@ Unauthenticated GitHub Search API requests have a restricted request quota.
 I detect GitHub rate-limit responses and, when the API provides a reset timestamp, display the approximate time at which the user can retry.
 
 Other API or network failures fall back to a generic error state.
+
+---
+
+### Code formatting
+
+I use Prettier to keep code formatting consistent across the project.
+
+Formatting can be applied with:
+
+```bash
+npm run format
+```
+
+and verified without modifying files with:
+
+```bash
+npm run format:check
+```
+
+This keeps indentation, line wrapping and general code style consistent across components, tests and configuration files.
 
 ---
 
@@ -353,6 +459,7 @@ These include:
 - `aria-current` for current navigation and pagination states;
 - `aria-pressed` for sorting controls;
 - `aria-live` for dynamic result information;
+- `aria-busy` while repository results are loading;
 - `role="status"` for loading and empty states;
 - `role="alert"` for API errors;
 - visible keyboard focus states;
@@ -433,6 +540,8 @@ I reproduced the main design characteristics including:
 - large hero typography;
 - gradient search field;
 - repository card grid;
+- compact repository metadata and icons;
+- relative update times;
 - sorting control;
 - pagination;
 - responsive spacing;
@@ -486,6 +595,8 @@ repo-scope/
 │   └── e2e/
 │       └── repository-search.spec.ts
 │
+├── .prettierignore
+├── .prettierrc
 ├── playwright.config.ts
 ├── package.json
 └── README.md
@@ -508,12 +619,13 @@ The Vercel project is connected to the GitHub repository, so updates pushed to t
 Before submission, I validate the project using:
 
 ```bash
+npm run format:check
 npm run lint
 npm run build
 npm run test:e2e
 ```
 
-This verifies code quality, the production build and the required end-to-end flows.
+This verifies consistent formatting, code quality, the production build and the end-to-end flows.
 
 ---
 
