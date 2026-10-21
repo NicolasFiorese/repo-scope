@@ -111,8 +111,7 @@ export default function Home() {
           setPage(targetPage);
           setSort(targetSort);
         } catch (error) {
-          setRepositories([]);
-          setTotalCount(0);
+          
 
           if (
             error instanceof
